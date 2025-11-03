@@ -1,0 +1,6 @@
+# Requisitos para treino da CNN de Pneumonia
+tensorflow==2.* 
+scikit-learn 
+pandas 
+matplotlib 
+opencv-python

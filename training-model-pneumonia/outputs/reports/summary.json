@@ -1,0 +1,8 @@
+{
+  "classes": [
+    "NORMAL",
+    "PNEUMONIA"
+  ],
+  "test_samples": 624,
+  "AUC": 0.934374315143546
+}

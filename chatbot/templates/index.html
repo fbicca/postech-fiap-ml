@@ -1,0 +1,53 @@
+{% raw %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duosystem Saúde</title>
+    <link rel="stylesheet" href="{% endraw %}{{ url_for('static', filename='css/index.css') }}{% raw %}">
+</head>
+<body>
+   <header class="cabecalho container">
+        <img src="{% endraw %}{{ url_for('static', filename='img/logo-chatbot.svg') }}{% raw %}" alt="Logo Chatbot">
+        <img 
+            src="{% endraw %}{{ url_for('static', filename='img/fiapalura.svg') }}{% raw %}" 
+            alt="Logo Chatbot"
+            style="width: 320px; height:100 auto; margin-top: 5px;">
+
+        <div class="cabecalho__acoes">
+            
+        </div>
+   </header> 
+   <main class="main">
+        <section class="chat container" id="chat">
+            <p class="chat__bolha chat__bolha--bot">
+                👋 Olá! Seja bem-vindo(a) à avaliação de saúde assistida.<br><br>
+                Este assistente foi desenvolvido para ajudá-lo(a) a estimar, de forma simples e segura, dois tipos de avaliações clínicas:<br><br>
+                1️⃣ Avaliação de Risco Cardiovascular — baseada em informações clínicas que permitem identificar o risco de doenças cardíacas.<br>
+                2️⃣ Avaliação de Quadro de Pneumonia — realizada a partir da análise de uma imagem de raio X de tórax.<br><br>
+                Por favor, escolha uma das opções abaixo para começar:<br>
+                👉 Responda com o número correspondente:<br><br>
+                1 — Avaliação de Risco Cardiovascular<br>
+                2 — Avaliação de Quadro de Pneumonia<br>
+                3 — Encerrar
+            </p>
+        </section>
+        <section class="entrada container">
+            <div class="entrada__container">
+                <button id="btnUpload" aria-label="Botão de mais opções">
+                    <i class="icone icone--mais-opcoes btn-plus is-disabled"></i>
+                </button>
+                <input type="text" class="entrada__input" placeholder="Enviar uma mensagem" id="input">
+                <button aria-label="Botão de enviar" id="botao-enviar">
+                    <img class="icone icone--enviar-mensagem"/>
+                </button>
+            </div>
+        </section>
+   </main>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="{% endraw %}{{ url_for('static', filename='js/index.js') }}{% raw %}"></script>
+</html>
+
+{% endraw %}
