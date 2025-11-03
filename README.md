@@ -16,7 +16,7 @@ Ele está organizado em módulos distintos:
 
 ## Tecnologias
 
-- Linguagem principal: **Python** (≈ 76,6%) :contentReference[oaicite:0]{index=0}
-- Também há scripts em Shell, JavaScript, CSS e HTML. :contentReference[oaicite:1]{index=1}
-- Uso de frameworks de ML (por padrão: scikit-learn, TensorFlow ou PyTorch – ver dentro dos diretórios)
+- Linguagem principal: **Python** (≈ 76,6%)
+- Também há scripts em Shell, JavaScript, CSS e HTML.
+- Uso de frameworks de ML (por padrão: scikit-learn, TensorFlow ou PyTorch etc)
 - API(s) provavelmente construídas com Flask/FastAPI ou similar (ver estrutura de `api-model*`)
