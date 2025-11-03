@@ -7,3 +7,13 @@ numpy==1.26.4
 # Opcionais (exploração e gráficos)
 matplotlib==3.9.2
 jupyter==1.0.0
+
+# Visualização
+seaborn==0.13.2
+
+# Geração de PDF
+reportlab==4.2.2
+
+# Utilitários do sistema
+argparse
+pathlib

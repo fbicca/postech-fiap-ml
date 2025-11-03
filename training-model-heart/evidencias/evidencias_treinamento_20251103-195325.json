@@ -1,0 +1,41 @@
+{
+  "timestamp": "20251103-195325",
+  "csv": "heart.csv",
+  "target": "HeartDisease",
+  "amostras_treino": 642,
+  "amostras_teste": 276,
+  "features": [
+    "Age",
+    "RestingBP",
+    "Cholesterol",
+    "FastingBS",
+    "MaxHR",
+    "Oldpeak",
+    "Sex_M",
+    "ChestPainType_ATA",
+    "ChestPainType_NAP",
+    "ChestPainType_TA",
+    "RestingECG_Normal",
+    "RestingECG_ST",
+    "ExerciseAngina_Y",
+    "ST_Slope_Flat",
+    "ST_Slope_Up"
+  ],
+  "metrics": {
+    "accuracy": 0.8840579710144928,
+    "precision": 0.8757763975155279,
+    "recall": 0.9215686274509803,
+    "f1": 0.8980891719745223,
+    "auc": 0.9324618736383442
+  },
+  "artifacts": {
+    "matriz_confusao_png": "evidencias/matriz_confusao_20251103-195325.png",
+    "roc_curve_png": "evidencias/roc_curve_20251103-195325.png",
+    "classification_report_txt": "evidencias/classification_report_20251103-195325.txt",
+    "preprocess_log_txt": "evidencias/evidencias_preprocess_20251103-195325.txt",
+    "coeficientes_csv": "evidencias/coeficientes_20251103-195325.csv",
+    "model_joblib": "evidencias/modelo_logreg_20251103-195325.joblib",
+    "scaler_joblib": "evidencias/scaler_standard_20251103-195325.joblib",
+    "features_json": "evidencias/features_20251103-195325.json"
+  }
+}
