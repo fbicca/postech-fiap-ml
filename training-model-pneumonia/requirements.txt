@@ -1,6 +1,9 @@
-# Requisitos para treino da CNN de Pneumonia
-tensorflow==2.* 
-scikit-learn 
-pandas 
-matplotlib 
-opencv-python
+tensorflow==2.20.0
+keras>=3.10.0
+numpy==1.26.4
+pandas==2.3.3
+matplotlib==3.9.2
+seaborn==0.13.2
+scikit-learn==1.7.2
+opencv-python==4.11.0.86
+reportlab==4.2.2
