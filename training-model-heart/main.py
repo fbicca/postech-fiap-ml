@@ -42,6 +42,10 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import cm
 
+from ag_algoritmo import AlgoritmoGenetico, executar_ag
+from ag_experimentos import executar_multiplos_experimentos, gerar_relatorio_comparativo, definir_experimentos_padrao
+from ag_comparacao import treinar_modelo_original, comparar_modelos, imprimir_comparacao
+
 def make_pdf_resumo(pdf_path, header, metrics_dict, cm_png, roc_png):
     c = canvas.Canvas(str(pdf_path), pagesize=A4)
     w, h = A4
@@ -83,10 +87,15 @@ def make_pdf_resumo(pdf_path, header, metrics_dict, cm_png, roc_png):
     c.save()
 
 def main():
-    parser = argparse.ArgumentParser(description="Gerar evidências do modelo cardíaco (Logistic Regression).")
+    parser = argparse.ArgumentParser(description="Gerar evidências do modelo cardíaco (Logistic Regression) com AG.")
     parser.add_argument("--csv", type=str, default="heart.csv", help="Caminho para o dataset (CSV).")
     parser.add_argument("--target", type=str, default="HeartDisease", help="Nome da coluna alvo.")
     parser.add_argument("--outdir", type=str, default="evidencias", help="Diretório de saída.")
+    parser.add_argument("--modo", type=str, default="experimentos", 
+                       choices=["simples", "experimentos", "comparar"],
+                       help="Modo de execução: 'simples' (um AG), 'experimentos' (múltiplos experimentos), 'comparar' (um AG + comparação).")
+    parser.add_argument("--num_experimentos", type=int, default=3,
+                       help="Número de experimentos a executar (apenas no modo 'experimentos').")
     args = parser.parse_args()
 
     csv_path = Path(args.csv)
@@ -126,13 +135,120 @@ def main():
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
 
-    # -------------------- Treinamento --------------------
-    model = LogisticRegression(solver="liblinear")
-    model.fit(X_train_scaled, y_train)
+    # -------------------- Algoritmo Genético e Comparação --------------------
+    # #AG Um Algoritmo Genético foi empregado para otimização dos hiperparâmetros do modelo de Regressão Logística.
+    # #AG Cada indivíduo da população representa um conjunto de hiperparâmetros (C, penalty, class_weight, max_iter).
+    # #AG A função fitness foi definida como combinação ponderada de accuracy (20%), recall (30%), F1-score (25%) e AUC (25%),
+    # #AG obtida por validação cruzada estratificada de 5 folds. Após a convergência do algoritmo genético,
+    # #AG o melhor conjunto de hiperparâmetros foi utilizado para o treinamento final do modelo.
+    
+    melhor_individuo = None
+    model = None
+    y_pred = None
+    y_prob = None
+    
+    if args.modo == "experimentos":
+        # #AG Modo: Executa múltiplos experimentos com diferentes configurações do AG
+        print("\n#AG Modo: MÚLTIPLOS EXPERIMENTOS")
+        print("#AG " + "="*80)
+        
+        # Define experimentos (pelo menos 3, conforme solicitado)
+        experimentos_config = definir_experimentos_padrao()
+        if args.num_experimentos < len(experimentos_config):
+            experimentos_config = experimentos_config[:args.num_experimentos]
+        
+        # Executa múltiplos experimentos
+        experimentos_executados = executar_multiplos_experimentos(
+            X_train_scaled, y_train, X_test_scaled, y_test,
+            experimentos_config=experimentos_config,
+            verbose=True
+        )
+        
+        # Gera relatório comparativo
+        relatorio_path = gerar_relatorio_comparativo(experimentos_executados, outdir, ts)
+        
+        # Usa o melhor modelo do melhor experimento (por AUC) para continuar o pipeline
+        melhor_experimento = max(experimentos_executados, 
+                                 key=lambda e: e.comparacao['modelo_otimizado']['auc'])
+        model = melhor_experimento.modelo_otimizado
+        melhor_individuo = melhor_experimento.melhor_individuo
+        
+        print(f"\n#AG Usando melhor modelo do experimento: {melhor_experimento.nome_experimento}")
+        
+    elif args.modo == "comparar":
+        # #AG Modo: Executa um AG e compara com modelo original
+        print("\n#AG Modo: COMPARAÇÃO (AG vs Original)")
+        print("#AG " + "="*80)
+        
+        # Executa o algoritmo genético
+        melhor_individuo = executar_ag(
+            X_train_scaled, y_train,
+            tamanho_populacao=20,
+            n_geracoes=15,
+            taxa_cruzamento=0.7,
+            taxa_mutacao=0.1,
+            n_elites=2,
+            metodo_selecao='torneio',
+            metodo_cruzamento='uniforme',
+            metodo_mutacao='uniforme',
+            metric='composite',
+            cv_folds=5,
+            verbose=True
+        )
+        
+        # Treina modelo original (padrão)
+        modelo_original = treinar_modelo_original(X_train_scaled, y_train)
+        
+        # Treina modelo otimizado
+        model = LogisticRegression(
+            solver="liblinear",
+            C=melhor_individuo["C"],
+            penalty=melhor_individuo["penalty"],
+            class_weight=melhor_individuo["class_weight"],
+            max_iter=melhor_individuo["max_iter"],
+            random_state=42
+        )
+        model.fit(X_train_scaled, y_train)
+        
+        # Compara modelos
+        comparacao = comparar_modelos(modelo_original, model, X_test_scaled, y_test)
+        imprimir_comparacao(comparacao, melhor_individuo)
+        
+    else:  # modo "simples"
+        # #AG Modo: Executa um único AG (comportamento padrão original)
+        print("\n#AG Modo: SIMPLES (Um único AG)")
+        print("#AG " + "="*80)
+        
+        melhor_individuo = executar_ag(
+            X_train_scaled, y_train,
+            tamanho_populacao=20,
+            n_geracoes=15,
+            taxa_cruzamento=0.7,
+            taxa_mutacao=0.1,
+            n_elites=2,
+            metodo_selecao='torneio',
+            metodo_cruzamento='uniforme',
+            metodo_mutacao='uniforme',
+            metric='composite',
+            cv_folds=5,
+            verbose=True
+        )
+        
+        # Treina modelo otimizado
+        model = LogisticRegression(
+            solver="liblinear",
+            C=melhor_individuo["C"],
+            penalty=melhor_individuo["penalty"],
+            class_weight=melhor_individuo["class_weight"],
+            max_iter=melhor_individuo["max_iter"],
+            random_state=42
+        )
+        model.fit(X_train_scaled, y_train)
 
     # -------------------- Predição e Métricas --------------------
-    y_pred = model.predict(X_test_scaled)
-    y_prob = model.predict_proba(X_test_scaled)[:, 1]
+    if y_pred is None:  # Se ainda não foi calculado (modos simples/comparar)
+        y_pred = model.predict(X_test_scaled)
+        y_prob = model.predict_proba(X_test_scaled)[:, 1]
 
     acc = accuracy_score(y_test, y_pred)
     precision, recall, f1, _ = precision_recall_fscore_support(y_test, y_pred, average="binary", zero_division=0)
@@ -191,6 +307,7 @@ def main():
         "timestamp": ts,
         "csv": str(csv_path),
         "target": args.target,
+        "modo": args.modo,
         "amostras_treino": int(X_train.shape[0]),
         "amostras_teste": int(X_test.shape[0]),
         "features": list(X.columns),
@@ -212,6 +329,17 @@ def main():
             "features_json": str(features_json),
         }
     }
+    
+    # #AG Adiciona informações do algoritmo genético se aplicável
+    if melhor_individuo:
+        resultados["algoritmo_genetico"] = {
+            "hiperparametros_otimizados": {
+                "C": float(melhor_individuo["C"]),
+                "penalty": melhor_individuo["penalty"],
+                "class_weight": str(melhor_individuo["class_weight"]),
+                "max_iter": int(melhor_individuo["max_iter"])
+            }
+        }
     json_path = outdir / f"evidencias_treinamento_{ts}.json"
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(resultados, f, indent=2, ensure_ascii=False)
