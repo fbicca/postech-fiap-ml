@@ -29,8 +29,8 @@ def fitness(individuo, X, y, cv_folds=5, metric='composite'):
     
     Args:
         individuo (dict): Indivíduo contendo hiperparâmetros
-        X (np.array): Features de treinamento
-        y (np.array): Labels de treinamento
+        X (np.array ou pd.DataFrame): Features de treinamento
+        y (np.array ou pd.Series): Labels de treinamento
         cv_folds (int): Número de folds para validação cruzada
         metric (str): Métrica a usar ('composite', 'auc', 'f1', 'recall')
         
@@ -38,6 +38,14 @@ def fitness(individuo, X, y, cv_folds=5, metric='composite'):
         float: Valor da função fitness (maior é melhor)
     """
     try:
+        # #AG Garante que X e y são arrays numpy (converte se necessário)
+        if hasattr(X, 'values'):
+            X = X.values
+        if hasattr(y, 'values'):
+            y = y.values
+        X = np.asarray(X)
+        y = np.asarray(y).ravel()  # Garante que y é 1D
+        
         # Cria modelo com os hiperparâmetros do indivíduo
         model = LogisticRegression(
             C=individuo['C'],
@@ -117,14 +125,22 @@ def fitness_detalhado(individuo, X, y, cv_folds=5):
     
     Args:
         individuo (dict): Indivíduo contendo hiperparâmetros
-        X (np.array): Features de treinamento
-        y (np.array): Labels de treinamento
+        X (np.array ou pd.DataFrame): Features de treinamento
+        y (np.array ou pd.Series): Labels de treinamento
         cv_folds (int): Número de folds para validação cruzada
         
     Returns:
         dict: Dicionário com todas as métricas calculadas
     """
     try:
+        # #AG Garante que X e y são arrays numpy (converte se necessário)
+        if hasattr(X, 'values'):
+            X = X.values
+        if hasattr(y, 'values'):
+            y = y.values
+        X = np.asarray(X)
+        y = np.asarray(y).ravel()  # Garante que y é 1D
+        
         model = LogisticRegression(
             C=individuo['C'],
             penalty=individuo['penalty'],

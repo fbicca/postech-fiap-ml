@@ -134,6 +134,10 @@ def main():
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
+    
+    # #AG Garante que y_train e y_test são arrays numpy (não Series do pandas)
+    y_train = np.asarray(y_train).ravel()
+    y_test = np.asarray(y_test).ravel()
 
     # -------------------- Algoritmo Genético e Comparação --------------------
     # #AG Um Algoritmo Genético foi empregado para otimização dos hiperparâmetros do modelo de Regressão Logística.
