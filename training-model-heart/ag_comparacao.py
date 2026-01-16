@@ -153,7 +153,10 @@ def imprimir_comparacao(comparacao, hiperparametros_otimizados=None):
         pct = comparacao['melhorias'][metric]['percentual']
         
         sinal = "+" if diff >= 0 else ""
-        print(f"{nome:<15} {orig:<12.4f} {otim:<12.4f} {sinal+str(diff):<12.4f} {sinal+str(pct):<11.2f}%")
+        # Formata os números antes de converter para string
+        diff_str = f"{sinal}{diff:.4f}"
+        pct_str = f"{sinal}{pct:.2f}%"
+        print(f"{nome:<15} {orig:<12.4f} {otim:<12.4f} {diff_str:<12} {pct_str:<12}")
     
     print("-" * 80)
     print("\n#AG Resumo:")
