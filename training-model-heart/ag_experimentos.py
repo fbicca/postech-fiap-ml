@@ -8,9 +8,18 @@ import json
 import datetime as dt
 from pathlib import Path
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')  # Para evitar problemas de display
+import matplotlib.pyplot as plt
+import seaborn as sns
 from ag_algoritmo import AlgoritmoGenetico
 from ag_comparacao import treinar_modelo_original, comparar_modelos, avaliar_modelo
+from ag_logging import criar_logger_por_modulo
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix, RocCurveDisplay
+
+# #AG Logger estruturado para experimentos
+logger_experimentos = criar_logger_por_modulo('ag_experimentos')
 
 
 class ExperimentoAG:
@@ -31,7 +40,9 @@ class ExperimentoAG:
         metodo_cruzamento='uniforme',
         metodo_mutacao='uniforme',
         metric='composite',
-        cv_folds=5
+        cv_folds=5,
+        outdir=None,
+        timestamp=None
     ):
         """
         #AG Inicializa um experimento com configurações específicas.
@@ -65,6 +76,12 @@ class ExperimentoAG:
         self.modelo_original = None
         self.comparacao = None
         self.historico_ag = None
+        
+        # #AG Caminhos dos gráficos (preenchidos após gerar gráficos)
+        self.outdir = outdir
+        self.timestamp = timestamp
+        self.cm_png_path = None
+        self.roc_png_path = None
     
     def executar(self, verbose=True):
         """
@@ -88,7 +105,7 @@ class ExperimentoAG:
             print(f"#AG   Mutação: {self.metodo_mutacao}")
             print(f"#AG   Métrica: {self.metric}")
         
-        # Executa o algoritmo genético
+        # #AG Executa o algoritmo genético com logging e salvamento de histórico
         ag = AlgoritmoGenetico(
             tamanho_populacao=self.tamanho_populacao,
             n_geracoes=self.n_geracoes,
@@ -100,11 +117,19 @@ class ExperimentoAG:
             metodo_mutacao=self.metodo_mutacao,
             metric=self.metric,
             cv_folds=self.cv_folds,
-            verbose=verbose
+            verbose=verbose,
+            salvar_historico=True,
+            diretorio_logs='logs',
+            gerar_graficos=True
         )
         
-        self.melhor_individuo = ag.evoluir(self.X_train, self.y_train)
+        self.melhor_individuo = ag.evoluir(self.X_train, self.y_train, nome_experimento=self.nome_experimento)
         self.historico_ag = ag.get_historico()
+        
+        # #AG Log de tempo de execução
+        tempo_exec = ag.get_tempo_execucao()
+        if verbose:
+            logger_experimentos.info(f"#AG Tempo de execução do AG: {tempo_exec['duracao_total']:.2f}s")
         
         # Treina modelos
         if verbose:
@@ -132,9 +157,55 @@ class ExperimentoAG:
             self.y_test
         )
         
+        # #AG Gera gráficos de matriz de confusão e ROC para este experimento
+        if self.outdir and self.timestamp:
+            self._gerar_graficos_experimento()
+        
         if verbose:
             from ag_comparacao import imprimir_comparacao
             imprimir_comparacao(self.comparacao, self.melhor_individuo)
+    
+    def _gerar_graficos_experimento(self):
+        """
+        #AG Gera e salva gráficos de matriz de confusão e ROC para o modelo otimizado deste experimento.
+        """
+        if self.modelo_otimizado is None:
+            return
+        
+        # Cria diretório se não existir
+        outdir_path = Path(self.outdir)
+        outdir_path.mkdir(parents=True, exist_ok=True)
+        
+        # Nome do experimento limpo para usar no nome do arquivo
+        nome_limpo = self.nome_experimento.replace(' ', '_').replace(':', '').replace('/', '_').replace('(', '').replace(')', '').lower()
+        
+        # Predições
+        y_pred = self.modelo_otimizado.predict(self.X_test)
+        y_prob = self.modelo_otimizado.predict_proba(self.X_test)[:, 1]
+        
+        # Matriz de Confusão
+        cm = confusion_matrix(self.y_test, y_pred)
+        plt.figure(figsize=(5, 4))
+        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
+        plt.title(f"Matriz de Confusão - {self.nome_experimento}")
+        plt.xlabel("Predito")
+        plt.ylabel("Verdadeiro")
+        self.cm_png_path = outdir_path / f"matriz_confusao_{nome_limpo}_{self.timestamp}.png"
+        plt.tight_layout()
+        plt.savefig(self.cm_png_path, dpi=140)
+        plt.close()
+        
+        # Curva ROC
+        RocCurveDisplay.from_predictions(self.y_test, y_prob)
+        plt.title(f"Curva ROC - {self.nome_experimento}")
+        self.roc_png_path = outdir_path / f"roc_curve_{nome_limpo}_{self.timestamp}.png"
+        plt.tight_layout()
+        plt.savefig(self.roc_png_path, dpi=140)
+        plt.close()
+        
+        logger_experimentos.info(f"#AG Gráficos do experimento '{self.nome_experimento}' salvos:")
+        logger_experimentos.info(f"#AG   - Matriz de Confusão: {self.cm_png_path}")
+        logger_experimentos.info(f"#AG   - ROC: {self.roc_png_path}")
     
     def get_resultado_dict(self):
         """
@@ -213,23 +284,25 @@ def definir_experimentos_padrao():
             'metric': 'composite'
         },
         {
-            'nome': 'Experimento 4: Foco em AUC + Mutação Não-Uniforme',
-            'tamanho_populacao': 25,
-            'n_geracoes': 18,
-            'taxa_cruzamento': 0.75,
+            'nome': 'Experimento 4: Foco em RECALL (Sensibilidade)',
+            #AG Configuração desenhada para priorizar Recall com boa exploração,
+            #AG mas sem população tão grande (compromisso entre custo e desempenho).
+            'tamanho_populacao': 30,
+            'n_geracoes': 25,
+            'taxa_cruzamento': 0.8,
             'taxa_mutacao': 0.15,
             'n_elites': 3,
             'metodo_selecao': 'torneio',
-            'metodo_cruzamento': 'blend',
-            'metodo_mutacao': 'nao_uniforme',
-            'metric': 'auc'
+            'metodo_cruzamento': 'aritmetico',   # mistura suave de C e max_iter
+            'metodo_mutacao': 'nao_uniforme',    # mutação forte no início, suave no fim
+            'metric': 'recall'                   # prioriza sensibilidade (poucos falsos negativos)
         }
     ]
     
     return experimentos
 
 
-def executar_multiplos_experimentos(X_train, y_train, X_test, y_test, experimentos_config=None, verbose=True):
+def executar_multiplos_experimentos(X_train, y_train, X_test, y_test, experimentos_config=None, verbose=True, outdir=None, timestamp=None):
     """
     #AG Executa múltiplos experimentos com diferentes configurações do AG.
     
@@ -237,6 +310,8 @@ def executar_multiplos_experimentos(X_train, y_train, X_test, y_test, experiment
         X_train, y_train, X_test, y_test: Dados de treino e teste
         experimentos_config (list): Lista de configurações de experimentos. Se None, usa padrão.
         verbose (bool): Se True, imprime progresso
+        outdir (str ou Path): Diretório para salvar gráficos e logs
+        timestamp (str): Timestamp para usar nos nomes dos arquivos
         
     Returns:
         list: Lista de objetos ExperimentoAG executados
@@ -270,7 +345,9 @@ def executar_multiplos_experimentos(X_train, y_train, X_test, y_test, experiment
             metodo_cruzamento=config['metodo_cruzamento'],
             metodo_mutacao=config['metodo_mutacao'],
             metric=config.get('metric', 'composite'),
-            cv_folds=5
+            cv_folds=5,
+            outdir=outdir,
+            timestamp=timestamp
         )
         
         experimento.executar(verbose=verbose)

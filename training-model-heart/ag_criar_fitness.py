@@ -15,6 +15,10 @@ from sklearn.metrics import (
     roc_auc_score,
     make_scorer
 )
+from ag_logging import criar_logger_por_modulo
+
+# #AG Logger estruturado para monitoramento
+logger = criar_logger_por_modulo('ag_fitness')
 
 
 def fitness(individuo, X, y, cv_folds=5, metric='composite'):
@@ -114,8 +118,9 @@ def fitness(individuo, X, y, cv_folds=5, metric='composite'):
         return float(fitness_value)
         
     except Exception as e:
-        # Em caso de erro (ex: não convergência), retorna fitness baixo
-        print(f"#AG Aviso: Erro ao calcular fitness: {e}")
+        # #AG Em caso de erro (ex: não convergência), retorna fitness baixo e loga
+        logger.warning(f"#AG Erro ao calcular fitness: {e}")
+        logger.debug(f"#AG Indivíduo que causou erro: {individuo}", exc_info=True)
         return 0.0
 
 
@@ -185,7 +190,9 @@ def fitness_detalhado(individuo, X, y, cv_folds=5):
         return metrics
         
     except Exception as e:
-        print(f"#AG Aviso: Erro ao calcular fitness detalhado: {e}")
+        # #AG Log estruturado de erro
+        logger.error(f"#AG Erro ao calcular fitness detalhado: {e}")
+        logger.debug(f"#AG Indivíduo que causou erro: {individuo}", exc_info=True)
         return {
             'accuracy': 0.0,
             'recall': 0.0,

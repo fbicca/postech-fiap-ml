@@ -14,6 +14,7 @@ Uso:
 """
 import argparse
 import json
+import logging
 import datetime as dt
 from pathlib import Path
 
@@ -45,8 +46,13 @@ from reportlab.lib.units import cm
 from ag_algoritmo import AlgoritmoGenetico, executar_ag
 from ag_experimentos import executar_multiplos_experimentos, gerar_relatorio_comparativo, definir_experimentos_padrao
 from ag_comparacao import treinar_modelo_original, comparar_modelos, imprimir_comparacao
+from ag_logging import configurar_logger
 
-def make_pdf_resumo(pdf_path, header, metrics_dict, cm_png, roc_png):
+def make_pdf_resumo(pdf_path, header, metrics_dict, cm_png, roc_png, experimentos_executados=None):
+    """
+    #AG Gera PDF resumo com métricas e gráficos.
+    Se experimentos_executados for fornecido, inclui gráficos de todos os experimentos.
+    """
     c = canvas.Canvas(str(pdf_path), pagesize=A4)
     w, h = A4
     y = h - 2*cm
@@ -69,21 +75,74 @@ def make_pdf_resumo(pdf_path, header, metrics_dict, cm_png, roc_png):
             c.drawString(2*cm, y, f"- {k.upper()}: {metrics_dict[k]:.4f}")
             y -= 0.5*cm
 
-    # Imagens (lado a lado se couber, senão empilhadas)
-    img_w = (w - 4*cm) / 2 - 0.5*cm
-    img_h = 6*cm
-
-    # Ajuste vertical
-    if y < 12*cm:
+    # #AG Se há múltiplos experimentos, inclui todos os gráficos
+    if experimentos_executados and len(experimentos_executados) > 1:
+        # Nova página para gráficos dos experimentos
         c.showPage()
         y = h - 2*cm
+        
+        c.setFont("Helvetica-Bold", 14)
+        c.drawString(2*cm, y, "Gráficos dos Experimentos (Modelos Otimizados pelo AG)")
+        y -= 1*cm
+        
+        # Dimensões dos gráficos (lado a lado: CM e ROC)
+        img_w = (w - 4*cm) / 2 - 0.5*cm
+        img_h = 5.5*cm
+        
+        for i, exp in enumerate(experimentos_executados, 1):
+            # Nova página para cada experimento (melhor organização)
+            c.showPage()
+            y = h - 2*cm
+            
+            # Título do experimento
+            c.setFont("Helvetica-Bold", 12)
+            nome_exp = exp.nome_experimento[:60]  # Trunca se muito longo
+            c.drawString(2*cm, y, f"Experimento {i}: {nome_exp}")
+            y -= 0.8*cm
+            
+            # Métricas do modelo otimizado
+            if exp.comparacao and 'modelo_otimizado' in exp.comparacao:
+                c.setFont("Helvetica", 10)
+                metrics = exp.comparacao['modelo_otimizado']
+                c.drawString(2*cm, y, f"Accuracy: {metrics.get('accuracy', 0):.4f} | "
+                                     f"Recall: {metrics.get('recall', 0):.4f} | "
+                                     f"F1: {metrics.get('f1', 0):.4f} | "
+                                     f"AUC: {metrics.get('auc', 0):.4f}")
+                y -= 0.8*cm
+            
+            # Posições dos gráficos (lado a lado)
+            y_img = y - img_h
+            
+            # Matriz de Confusão (esquerda)
+            if exp.cm_png_path and Path(exp.cm_png_path).exists():
+                c.drawImage(str(exp.cm_png_path), 2*cm, y_img, width=img_w, height=img_h, preserveAspectRatio=True, mask='auto')
+                c.setFont("Helvetica", 9)
+                c.drawString(2*cm, y_img - 0.4*cm, "Matriz de Confusão")
+            
+            # Curva ROC (direita)
+            if exp.roc_png_path and Path(exp.roc_png_path).exists():
+                c.drawImage(str(exp.roc_png_path), 2*cm + img_w + 1*cm, y_img, width=img_w, height=img_h, preserveAspectRatio=True, mask='auto')
+                c.setFont("Helvetica", 9)
+                c.drawString(2*cm + img_w + 1*cm, y_img - 0.4*cm, "Curva ROC")
+        
+        c.showPage()
+    else:
+        # Modo original: apenas um par de gráficos (lado a lado)
+        img_w = (w - 4*cm) / 2 - 0.5*cm
+        img_h = 6*cm
 
-    if Path(cm_png).exists():
-        c.drawImage(str(cm_png), 2*cm, y - img_h, width=img_w, height=img_h, preserveAspectRatio=True, mask='auto')
-    if Path(roc_png).exists():
-        c.drawImage(str(roc_png), 2*cm + img_w + 1*cm, y - img_h, width=img_w, height=img_h, preserveAspectRatio=True, mask='auto')
+        # Ajuste vertical
+        if y < 12*cm:
+            c.showPage()
+            y = h - 2*cm
 
-    c.showPage()
+        if Path(cm_png).exists():
+            c.drawImage(str(cm_png), 2*cm, y - img_h, width=img_w, height=img_h, preserveAspectRatio=True, mask='auto')
+        if Path(roc_png).exists():
+            c.drawImage(str(roc_png), 2*cm + img_w + 1*cm, y - img_h, width=img_w, height=img_h, preserveAspectRatio=True, mask='auto')
+        
+        c.showPage()
+
     c.save()
 
 def main():
@@ -106,6 +165,17 @@ def main():
     outdir.mkdir(parents=True, exist_ok=True)
 
     ts = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+    
+    # #AG Configura logging estruturado para todo o pipeline
+    logger_principal = configurar_logger(
+        nome_logger='AG.Main',
+        diretorio_logs=str(outdir / 'logs'),
+        nivel=logging.INFO,
+        salvar_arquivo=True,
+        formato_detalhado=True
+    )
+    logger_principal.info(f"#AG Iniciando pipeline de treinamento - Modo: {args.modo}")
+    logger_principal.info(f"#AG Dataset: {args.csv}, Target: {args.target}")
 
     # -------------------- Carregamento --------------------
     df = pd.read_csv(csv_path)
@@ -150,6 +220,7 @@ def main():
     model = None
     y_pred = None
     y_prob = None
+    experimentos_executados = None  # #AG Inicializa para uso no PDF
     
     if args.modo == "experimentos":
         # #AG Modo: Executa múltiplos experimentos com diferentes configurações do AG
@@ -165,7 +236,9 @@ def main():
         experimentos_executados = executar_multiplos_experimentos(
             X_train_scaled, y_train, X_test_scaled, y_test,
             experimentos_config=experimentos_config,
-            verbose=True
+            verbose=True,
+            outdir=outdir,
+            timestamp=ts
         )
         
         # Gera relatório comparativo
@@ -351,7 +424,9 @@ def main():
     # -------------------- PDF Resumo --------------------
     header = f"CSV: {csv_path.name} | Target: {args.target} | Train/Test: 70/30 | Data: {ts}"
     pdf_path = outdir / f"resumo_evidencias_{ts}.pdf"
-    make_pdf_resumo(pdf_path, header, resultados["metrics"], cm_path, roc_path)
+    
+    # #AG Se está no modo experimentos, passa a lista de experimentos para incluir todos os gráficos
+    make_pdf_resumo(pdf_path, header, resultados["metrics"], cm_path, roc_path, experimentos_executados)
 
     print("\n✅ Evidências geradas com sucesso!")
     print(f"- JSON métricas: {json_path}")

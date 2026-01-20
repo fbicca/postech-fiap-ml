@@ -6,6 +6,8 @@
 
 Este repositório abriga vários modelos de Machine Learning desenvolvidos como parte de um curso do programa de pós-graduação, envolvendo tarefas como previsão de doenças cardíacas e pneumonia através de um chatbot.
 
+## Instalação
+
 Ele está organizado em módulos distintos:
 
 - `training‐model‐heart` — treinamento de modelo para doença cardíaca

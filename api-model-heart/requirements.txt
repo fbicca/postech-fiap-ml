@@ -6,3 +6,4 @@ joblib
 scikit-learn==1.7.2
 python-multipart
 pydantic>=2.0
+openai>=1.0.0

@@ -6,11 +6,16 @@ Orquestra a evolução da população: inicialização, avaliação, seleção, 
 """
 
 import numpy as np
+import time
+from datetime import datetime
+from pathlib import Path
 from ag_criar_individuo import criar_individuo, copiar_individuo
 from ag_criar_fitness import fitness, fitness_detalhado
 from ag_selecao import selecao_mista, selecao_elitismo
 from ag_cruzamento import cruzamento_uniforme, cruzamento_aritmetico, cruzamento_blend
 from ag_mutacao import mutacao_uniforme, mutacao_gaussiana, mutacao_nao_uniforme
+from ag_logging import criar_logger_por_modulo
+from ag_visualizacao import gerar_grafico_evolucao_fitness, gerar_grafico_convergencia
 
 
 class AlgoritmoGenetico:
@@ -30,7 +35,10 @@ class AlgoritmoGenetico:
         metodo_mutacao='uniforme',
         metric='composite',
         cv_folds=5,
-        verbose=True
+        verbose=True,
+        salvar_historico=True,
+        diretorio_logs='logs',
+        gerar_graficos=True
     ):
         """
         #AG Inicializa o algoritmo genético com parâmetros configuráveis.
@@ -47,6 +55,9 @@ class AlgoritmoGenetico:
             metric (str): Métrica para fitness ('composite', 'auc', 'f1', 'recall')
             cv_folds (int): Número de folds para validação cruzada
             verbose (bool): Se True, imprime progresso
+            salvar_historico (bool): Se True, salva histórico em arquivo
+            diretorio_logs (str): Diretório para salvar logs e histórico
+            gerar_graficos (bool): Se True, gera gráficos de evolução
         """
         self.tamanho_populacao = tamanho_populacao
         self.n_geracoes = n_geracoes
@@ -59,11 +70,39 @@ class AlgoritmoGenetico:
         self.metric = metric
         self.cv_folds = cv_folds
         self.verbose = verbose
+        self.salvar_historico = salvar_historico
+        self.diretorio_logs = Path(diretorio_logs)
+        self.gerar_graficos = gerar_graficos
+        
+        # #AG Logger estruturado para monitoramento
+        self.logger = criar_logger_por_modulo('ag_algoritmo')
         
         # Histórico da evolução
         self.historico_fitness = []
         self.melhor_individuo = None
         self.melhor_fitness = -np.inf
+        
+        # Tracking de tempo
+        self.tempo_execucao = {
+            'inicio': None,
+            'fim': None,
+            'duracao_total': None,
+            'tempo_por_geracao': []
+        }
+        
+        # Configuração salva para rastreabilidade
+        self.configuracao = {
+            'tamanho_populacao': tamanho_populacao,
+            'n_geracoes': n_geracoes,
+            'taxa_cruzamento': taxa_cruzamento,
+            'taxa_mutacao': taxa_mutacao,
+            'n_elites': n_elites,
+            'metodo_selecao': metodo_selecao,
+            'metodo_cruzamento': metodo_cruzamento,
+            'metodo_mutacao': metodo_mutacao,
+            'metric': metric,
+            'cv_folds': cv_folds
+        }
     
     def inicializar_populacao(self):
         """
@@ -159,26 +198,44 @@ class AlgoritmoGenetico:
         else:
             raise ValueError(f"Método de mutação '{self.metodo_mutacao}' não reconhecido")
     
-    def evoluir(self, X, y):
+    def evoluir(self, X, y, nome_experimento=None):
         """
         #AG Executa a evolução completa do algoritmo genético.
         
         Args:
             X (np.array): Features de treinamento
             y (np.array): Labels de treinamento
+            nome_experimento (str): Nome do experimento (para salvamento)
             
         Returns:
             dict: Melhor indivíduo encontrado
         """
-        # Inicializa população
-        populacao = self.inicializar_populacao()
+        # #AG Inicia tracking de tempo
+        self.tempo_execucao['inicio'] = time.time()
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+        # #AG Log de início
+        self.logger.info("#AG Iniciando algoritmo genético...")
+        self.logger.info(f"#AG Configuração: População={self.tamanho_populacao}, Gerações={self.n_geracoes}, "
+                        f"Taxa Cruzamento={self.taxa_cruzamento}, Taxa Mutação={self.taxa_mutacao}")
         
         if self.verbose:
             print("#AG Iniciando algoritmo genético...")
             print(f"#AG População: {self.tamanho_populacao}, Gerações: {self.n_geracoes}")
         
+        # #AG Salva configuração
+        if self.salvar_historico:
+            from ag_logging import salvar_configuracao_ag
+            config_path = salvar_configuracao_ag(self.configuracao, self.diretorio_logs, timestamp)
+            self.logger.info(f"#AG Configuração salva em: {config_path}")
+        
+        # Inicializa população
+        populacao = self.inicializar_populacao()
+        self.logger.info(f"#AG População inicial criada com {len(populacao)} indivíduos")
+        
         # Evolução por gerações
         for geracao in range(self.n_geracoes):
+            tempo_geracao_inicio = time.time()
             # Avalia população
             populacao_fitness = self.avaliar_populacao(populacao, X, y)
             
@@ -195,12 +252,21 @@ class AlgoritmoGenetico:
             fitness_medio = np.mean([pf[1] for pf in populacao_fitness])
             fitness_max = populacao_fitness[0][1]
             fitness_min = populacao_fitness[-1][1]
+            tempo_geracao = time.time() - tempo_geracao_inicio
+            
             self.historico_fitness.append({
                 'geracao': geracao,
                 'fitness_medio': fitness_medio,
                 'fitness_max': fitness_max,
-                'fitness_min': fitness_min
+                'fitness_min': fitness_min,
+                'tempo_segundos': tempo_geracao
             })
+            self.tempo_execucao['tempo_por_geracao'].append(tempo_geracao)
+            
+            # #AG Log estruturado da geração
+            self.logger.info(f"#AG Geração {geracao+1}/{self.n_geracoes} - "
+                           f"Fitness: max={fitness_max:.4f}, médio={fitness_medio:.4f}, min={fitness_min:.4f}, "
+                           f"Tempo: {tempo_geracao:.2f}s")
             
             if self.verbose:
                 print(f"#AG Geração {geracao+1}/{self.n_geracoes} - "
@@ -228,9 +294,51 @@ class AlgoritmoGenetico:
             
             populacao = nova_populacao
         
+        # #AG Finaliza tracking de tempo
+        self.tempo_execucao['fim'] = time.time()
+        self.tempo_execucao['duracao_total'] = self.tempo_execucao['fim'] - self.tempo_execucao['inicio']
+        
+        # #AG Log de conclusão
+        self.logger.info(f"#AG Algoritmo genético concluído!")
+        self.logger.info(f"#AG Melhor fitness: {self.melhor_fitness:.4f}")
+        self.logger.info(f"#AG Tempo total de execução: {self.tempo_execucao['duracao_total']:.2f} segundos "
+                        f"({self.tempo_execucao['duracao_total']/60:.2f} minutos)")
+        
         if self.verbose:
             print(f"#AG Algoritmo genético concluído!")
             print(f"#AG Melhor fitness: {self.melhor_fitness:.4f}")
+            print(f"#AG Tempo total: {self.tempo_execucao['duracao_total']:.2f}s")
+        
+        # #AG Salva histórico em arquivo
+        if self.salvar_historico:
+            from ag_logging import salvar_historico_evolucao
+            historico_path = salvar_historico_evolucao(
+                self.historico_fitness, 
+                self.diretorio_logs, 
+                nome_experimento=nome_experimento,
+                timestamp=timestamp
+            )
+            self.logger.info(f"#AG Histórico salvo em: {historico_path}")
+        
+        # #AG Gera gráficos de evolução
+        if self.gerar_graficos and self.historico_fitness:
+            try:
+                if nome_experimento:
+                    nome_limpo = nome_experimento.replace(' ', '_').replace(':', '').replace('/', '_')
+                    grafico_evolucao_path = self.diretorio_logs / f"ag_evolucao_fitness_{nome_limpo}_{timestamp}.png"
+                    grafico_convergencia_path = self.diretorio_logs / f"ag_convergencia_{nome_limpo}_{timestamp}.png"
+                else:
+                    grafico_evolucao_path = self.diretorio_logs / f"ag_evolucao_fitness_{timestamp}.png"
+                    grafico_convergencia_path = self.diretorio_logs / f"ag_convergencia_{timestamp}.png"
+                
+                gerar_grafico_evolucao_fitness(self.historico_fitness, grafico_evolucao_path)
+                gerar_grafico_convergencia(self.historico_fitness, grafico_convergencia_path)
+                
+                self.logger.info(f"#AG Gráficos gerados:")
+                self.logger.info(f"#AG   - Evolução: {grafico_evolucao_path}")
+                self.logger.info(f"#AG   - Convergência: {grafico_convergencia_path}")
+            except Exception as e:
+                self.logger.warning(f"#AG Erro ao gerar gráficos: {e}")
         
         return self.melhor_individuo
     
@@ -242,6 +350,15 @@ class AlgoritmoGenetico:
             list: Lista de dicionários com histórico por geração
         """
         return self.historico_fitness
+    
+    def get_tempo_execucao(self):
+        """
+        #AG Retorna informações de tempo de execução.
+        
+        Returns:
+            dict: Dicionário com informações de tempo
+        """
+        return self.tempo_execucao.copy()
 
 
 def executar_ag(

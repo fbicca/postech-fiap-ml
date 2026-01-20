@@ -1,0 +1,50 @@
+{
+  "timestamp": "20260119-095659",
+  "csv": "heart.csv",
+  "target": "HeartDisease",
+  "modo": "experimentos",
+  "amostras_treino": 642,
+  "amostras_teste": 276,
+  "features": [
+    "Age",
+    "RestingBP",
+    "Cholesterol",
+    "FastingBS",
+    "MaxHR",
+    "Oldpeak",
+    "Sex_M",
+    "ChestPainType_ATA",
+    "ChestPainType_NAP",
+    "ChestPainType_TA",
+    "RestingECG_Normal",
+    "RestingECG_ST",
+    "ExerciseAngina_Y",
+    "ST_Slope_Flat",
+    "ST_Slope_Up"
+  ],
+  "metrics": {
+    "accuracy": 0.855072463768116,
+    "precision": 0.8304093567251462,
+    "recall": 0.9281045751633987,
+    "f1": 0.8765432098765432,
+    "auc": 0.9318242202029864
+  },
+  "artifacts": {
+    "matriz_confusao_png": "evidencias/matriz_confusao_20260119-095659.png",
+    "roc_curve_png": "evidencias/roc_curve_20260119-095659.png",
+    "classification_report_txt": "evidencias/classification_report_20260119-095659.txt",
+    "preprocess_log_txt": "evidencias/evidencias_preprocess_20260119-095659.txt",
+    "coeficientes_csv": "evidencias/coeficientes_20260119-095659.csv",
+    "model_joblib": "evidencias/modelo_logreg_20260119-095659.joblib",
+    "scaler_joblib": "evidencias/scaler_standard_20260119-095659.joblib",
+    "features_json": "evidencias/features_20260119-095659.json"
+  },
+  "algoritmo_genetico": {
+    "hiperparametros_otimizados": {
+      "C": 80.249889877463,
+      "penalty": "l2",
+      "class_weight": "{0: 0.7276485595796789, 1: 1.72022353695084}",
+      "max_iter": 4290
+    }
+  }
+}

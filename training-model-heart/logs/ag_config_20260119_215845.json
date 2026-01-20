@@ -1,0 +1,16 @@
+{
+  "timestamp": "20260119_215845",
+  "configuracao": {
+    "tamanho_populacao": 30,
+    "n_geracoes": 25,
+    "taxa_cruzamento": 0.8,
+    "taxa_mutacao": 0.15,
+    "n_elites": 3,
+    "metodo_selecao": "torneio",
+    "metodo_cruzamento": "aritmetico",
+    "metodo_mutacao": "nao_uniforme",
+    "metric": "recall",
+    "cv_folds": 5
+  },
+  "data_hora": "2026-01-19T21:58:45.013531"
+}

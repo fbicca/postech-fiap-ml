@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 import joblib
 import os
+from openai import OpenAI
 
 # ------------------------------------------------------------------------------
 # Config
@@ -16,8 +17,28 @@ MODEL_PATH = os.getenv("MODEL_PATH", "modelo_insuficiencia_cardiaca.pkl")
 SCALER_PATH = os.getenv("SCALER_PATH", "scaler_dados.pkl")
 # Fallback de colunas do treino (usa cabeçalho do CSV para recuperar ordem/nomes)
 FEATURE_COLUMNS_PATH = os.getenv("FEATURE_COLUMNS_PATH", "X_train.csv")
+# OpenAI Configuration
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")  # Modelo barato mas eficiente
 
 app = FastAPI(title="Heart Failure Predictor API", version="1.2.0")
+
+# Inicializar cliente OpenAI (se API key estiver disponível)
+openai_client = None
+print(f"[DEBUG OpenAI Init] Verificando configuração da OpenAI...")
+print(f"[DEBUG OpenAI Init] OPENAI_API_KEY definida: {bool(OPENAI_API_KEY)}")
+if OPENAI_API_KEY:
+    print(f"[DEBUG OpenAI Init] OPENAI_API_KEY encontrada (primeiros 10 caracteres: {OPENAI_API_KEY[:10]}...)")
+    print(f"[DEBUG OpenAI Init] OPENAI_MODEL: {OPENAI_MODEL}")
+    try:
+        openai_client = OpenAI(api_key=OPENAI_API_KEY)
+        print(f"[DEBUG OpenAI Init] ✅ Cliente OpenAI inicializado com sucesso!")
+    except Exception as e:
+        print(f"[DEBUG OpenAI Init] ❌ Warning: Não foi possível inicializar cliente OpenAI: {e}")
+        import traceback
+        traceback.print_exc()
+else:
+    print(f"[DEBUG OpenAI Init] ⚠️ OPENAI_API_KEY não configurada. Explicações da OpenAI não estarão disponíveis.")
 
 
 # ------------------------------------------------------------------------------
@@ -175,6 +196,9 @@ class PredictResponse(BaseModel):
     probability_positive: float
     modelDetails: Dict[str, Any]
     warnings: List[str] = []
+    explanation: Optional[str] = None  # Explicação em linguagem natural gerada pela OpenAI (para paciente)
+    explanation_patient: Optional[str] = None  # Explicação para o paciente
+    explanation_professional: Optional[str] = None  # Explicação técnica para o profissional médico
 
 
 # ------------------------------------------------------------------------------
@@ -266,6 +290,200 @@ def encode_align_scale(df_row: pd.DataFrame):
 
 
 # ------------------------------------------------------------------------------
+# Geração de explicações com OpenAI
+# ------------------------------------------------------------------------------
+def generate_explanation(patient: Patient, prediction: int, label: str, probability: float) -> Optional[Dict[str, Optional[str]]]:
+    """
+    Gera explicações em linguagem natural do diagnóstico usando OpenAI.
+    Retorna um dict com duas explicações:
+    - 'patient': explicação simples e acessível para o paciente
+    - 'professional': explicação técnica detalhada para o profissional médico
+    - 'full': resposta completa (para compatibilidade)
+    Retorna None se a API não estiver configurada ou houver erro.
+    """
+    print(f"[DEBUG OpenAI] Iniciando geração de explicação...")
+    print(f"[DEBUG OpenAI] Cliente OpenAI inicializado: {openai_client is not None}")
+    print(f"[DEBUG OpenAI] OPENAI_API_KEY configurada: {bool(OPENAI_API_KEY)}")
+    print(f"[DEBUG OpenAI] Modelo configurado: {OPENAI_MODEL}")
+    
+    if not openai_client:
+        print("[DEBUG OpenAI] ❌ Cliente OpenAI não está inicializado. Retornando None.")
+        return None
+    
+    try:
+        print(f"[DEBUG OpenAI] ✅ Cliente OpenAI disponível. Gerando explicação...")
+        # Mapear valores para descrições mais legíveis
+        sex_map = {"M": "masculino", "F": "feminino"}
+        chest_pain_map = {
+            "TA": "angina típica",
+            "ATA": "angina atípica",
+            "NAP": "dor não anginosa",
+            "ASY": "assintomática"
+        }
+        ecg_map = {
+            "Normal": "normal",
+            "ST": "anormalidade da onda ST-T",
+            "LVH": "hipertrofia ventricular esquerda"
+        }
+        slope_map = {
+            "Up": "ascendente",
+            "Flat": "plano",
+            "Down": "descendente"
+        }
+        
+        # Preparar dados do paciente em formato legível
+        patient_data = f"""
+Dados do paciente:
+- Idade: {patient.Age} anos
+- Sexo: {sex_map.get(patient.Sex, patient.Sex)}
+- Tipo de dor no peito: {chest_pain_map.get(patient.ChestPainType, patient.ChestPainType)}
+- Pressão arterial em repouso: {patient.RestingBP} mmHg
+- Colesterol: {patient.Cholesterol} mg/dL
+- Glicemia de jejum elevada: {"Sim" if patient.FastingBS == 1 else "Não"}
+- ECG em repouso: {ecg_map.get(patient.RestingECG, patient.RestingECG)}
+- Frequência cardíaca máxima: {patient.MaxHR} bpm
+- Angina induzida por exercício: {"Sim" if patient.ExerciseAngina == "Y" else "Não"}
+- Depressão do segmento ST (Oldpeak): {patient.Oldpeak}
+- Inclinação do segmento ST: {slope_map.get(patient.ST_Slope, patient.ST_Slope)}
+"""
+        
+        # Preparar prompt
+        risk_level = "ALTO RISCO" if prediction == 1 else "BAIXO RISCO"
+        probability_percent = f"{probability * 100:.1f}%"
+        
+        prompt = f"""Você é um assistente médico especializado em cardiologia. Analise os dados do paciente e o resultado do modelo de predição de risco cardíaco e forneça DUAS explicações distintas em português brasileiro.
+
+{patient_data}
+
+Resultado da predição:
+- Nível de risco: {risk_level}
+- Probabilidade de doença cardiovascular: {probability_percent}
+
+Por favor, forneça DUAS explicações separadas:
+
+## 1. EXPLICAÇÃO PARA O PACIENTE
+Forneça uma explicação em linguagem natural, simples e acessível que:
+- Explique o que significa o resultado do diagnóstico de forma clara e compreensível
+- Use linguagem simples, evitando termos técnicos complexos
+- Destaque os principais fatores de risco identificados de forma educativa
+- Mantenha um tom empático, acolhedor e tranquilizador
+- Inclua orientações práticas sobre próximos passos
+- Seja concisa (máximo 150 palavras)
+- IMPORTANTE: Sempre enfatize que esta é apenas uma predição baseada em modelo de machine learning e que é essencial consultar um médico para diagnóstico definitivo
+
+## 2. EXPLICAÇÃO PARA O PROFISSIONAL MÉDICO
+Forneça uma explicação técnica e detalhada que:
+- Analise os dados clínicos do paciente de forma técnica
+- Destaque os fatores de risco específicos identificados e sua relevância clínica
+- Explique a correlação entre os parâmetros e o resultado da predição
+- Inclua considerações sobre a confiabilidade do modelo e limitações
+- Sugira possíveis investigações complementares se necessário
+- Use terminologia médica apropriada
+- Seja concisa mas completa (máximo 200 palavras)
+- Inclua observações sobre a interpretação clínica do resultado
+
+FORMATO DE RESPOSTA:
+Use o seguinte formato exato, separando as duas explicações:
+
+---EXPLICAÇÃO_PACIENTE---
+[sua explicação para o paciente aqui]
+---FIM_EXPLICAÇÃO_PACIENTE---
+
+---EXPLICAÇÃO_PROFISSIONAL---
+[sua explicação técnica para o profissional aqui]
+---FIM_EXPLICAÇÃO_PROFISSIONAL---"""
+
+        print(f"[DEBUG OpenAI] Prompt preparado. Tamanho: {len(prompt)} caracteres")
+        print(f"[DEBUG OpenAI] Dados do paciente: Idade={patient.Age}, Sexo={patient.Sex}, Risco={risk_level}, Prob={probability_percent}")
+        
+        # Chamar API da OpenAI
+        print(f"[DEBUG OpenAI] 📤 Enviando requisição para OpenAI (modelo: {OPENAI_MODEL})...")
+        response = openai_client.chat.completions.create(
+            model=OPENAI_MODEL,
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Você é um assistente médico especializado em cardiologia que explica resultados de exames e predições de risco cardíaco de forma clara e compreensível."
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            temperature=0.7,
+            max_tokens=800  # Aumentado para acomodar duas explicações
+        )
+        
+        print(f"[DEBUG OpenAI] ✅ Resposta recebida da OpenAI")
+        print(f"[DEBUG OpenAI] ID da resposta: {response.id}")
+        print(f"[DEBUG OpenAI] Modelo usado: {response.model}")
+        print(f"[DEBUG OpenAI] Tokens usados: {response.usage.total_tokens if hasattr(response, 'usage') else 'N/A'}")
+        print(f"[DEBUG OpenAI] Finish reason: {response.choices[0].finish_reason if response.choices else 'N/A'}")
+        
+        full_response = response.choices[0].message.content.strip()
+        print(f"[DEBUG OpenAI] ✅ Resposta completa gerada com sucesso!")
+        print(f"[DEBUG OpenAI] Tamanho da resposta completa: {len(full_response)} caracteres")
+        
+        # Processar e separar as duas explicações
+        explanation_patient = None
+        explanation_professional = None
+        
+        try:
+            # Extrair explicação do paciente
+            if "---EXPLICAÇÃO_PACIENTE---" in full_response and "---FIM_EXPLICAÇÃO_PACIENTE---" in full_response:
+                start_patient = full_response.find("---EXPLICAÇÃO_PACIENTE---") + len("---EXPLICAÇÃO_PACIENTE---")
+                end_patient = full_response.find("---FIM_EXPLICAÇÃO_PACIENTE---")
+                explanation_patient = full_response[start_patient:end_patient].strip()
+            elif "EXPLICAÇÃO PARA O PACIENTE" in full_response or "EXPLICAÇÃO_PACIENTE" in full_response:
+                # Fallback: tentar extrair sem marcadores exatos
+                parts = full_response.split("EXPLICAÇÃO PARA O PACIENTE")
+                if len(parts) > 1:
+                    explanation_patient = parts[1].split("EXPLICAÇÃO PARA O PROFISSIONAL")[0].strip()
+            
+            # Extrair explicação profissional
+            if "---EXPLICAÇÃO_PROFISSIONAL---" in full_response and "---FIM_EXPLICAÇÃO_PROFISSIONAL---" in full_response:
+                start_prof = full_response.find("---EXPLICAÇÃO_PROFISSIONAL---") + len("---EXPLICAÇÃO_PROFISSIONAL---")
+                end_prof = full_response.find("---FIM_EXPLICAÇÃO_PROFISSIONAL---")
+                explanation_professional = full_response[start_prof:end_prof].strip()
+            elif "EXPLICAÇÃO PARA O PROFISSIONAL" in full_response or "EXPLICAÇÃO_PROFISSIONAL" in full_response:
+                # Fallback: tentar extrair sem marcadores exatos
+                parts = full_response.split("EXPLICAÇÃO PARA O PROFISSIONAL")
+                if len(parts) > 1:
+                    explanation_professional = parts[1].strip()
+            
+            # Se não conseguiu separar, usar a resposta completa como explicação do paciente (compatibilidade)
+            if not explanation_patient and not explanation_professional:
+                explanation_patient = full_response
+                print(f"[DEBUG OpenAI] ⚠️ Não foi possível separar as explicações. Usando resposta completa como explicação do paciente.")
+            else:
+                print(f"[DEBUG OpenAI] ✅ Explicações separadas com sucesso!")
+                print(f"[DEBUG OpenAI] Tamanho explicação paciente: {len(explanation_patient) if explanation_patient else 0} caracteres")
+                print(f"[DEBUG OpenAI] Tamanho explicação profissional: {len(explanation_professional) if explanation_professional else 0} caracteres")
+        
+        except Exception as parse_error:
+            print(f"[DEBUG OpenAI] ⚠️ Erro ao processar explicações: {parse_error}")
+            # Em caso de erro no parsing, usar a resposta completa como explicação do paciente
+            explanation_patient = full_response
+        
+        # Retornar dict com ambas as explicações
+        return {
+            "patient": explanation_patient,
+            "professional": explanation_professional,
+            "full": full_response  # Manter compatibilidade
+        }
+        
+    except Exception as e:
+        # Em caso de erro, não quebrar a API, apenas não retornar explicação
+        print(f"[DEBUG OpenAI] ❌ ERRO ao gerar explicação com OpenAI:")
+        print(f"[DEBUG OpenAI] Tipo do erro: {type(e).__name__}")
+        print(f"[DEBUG OpenAI] Mensagem do erro: {str(e)}")
+        import traceback
+        print(f"[DEBUG OpenAI] Traceback completo:")
+        traceback.print_exc()
+        return None
+
+
+# ------------------------------------------------------------------------------
 # Rotas
 # ------------------------------------------------------------------------------
 @app.get("/health")
@@ -296,6 +514,30 @@ def predict(patient: Patient):
         pred = int(MODEL.predict(X_scaled_df)[0])
         label = "ALTO_RISCO" if pred == 1 else "BAIXO_RISCO"
 
+        # Gerar explicação usando OpenAI
+        print(f"[DEBUG /predict] Gerando explicação para predição: {pred}, label: {label}, prob: {proba:.4f}")
+        explanation_result = generate_explanation(patient, pred, label, proba)
+        print(f"[DEBUG /predict] Resultado da explicação recebido: {type(explanation_result)}")
+        
+        # Processar resultado da explicação
+        explanation_patient = None
+        explanation_professional = None
+        explanation_full = None
+        
+        if explanation_result:
+            if isinstance(explanation_result, dict):
+                explanation_patient = explanation_result.get("patient")
+                explanation_professional = explanation_result.get("professional")
+                explanation_full = explanation_result.get("full") or explanation_patient
+            elif isinstance(explanation_result, str):
+                # Compatibilidade: se retornar string, usar como explicação do paciente
+                explanation_patient = explanation_result
+                explanation_full = explanation_result
+        
+        print(f"[DEBUG /predict] Explicação paciente: {bool(explanation_patient)}")
+        print(f"[DEBUG /predict] Explicação profissional: {bool(explanation_professional)}")
+        
+        # Manter 'explanation' para compatibilidade com código existente (usa explicação do paciente)
         return {
             "prediction": pred,
             "label": label,
@@ -305,6 +547,9 @@ def predict(patient: Patient):
                 "model_class": type(MODEL).__name__,
             },
             "warnings": warnings,
+            "explanation": explanation_full,  # Compatibilidade: explicação do paciente
+            "explanation_patient": explanation_patient,
+            "explanation_professional": explanation_professional,
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify, send_file, session, 
 from flask_cors import CORS
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
+from typing import Optional
 import os, io, re, random, tempfile, subprocess
 import requests
 from validation import *
@@ -27,7 +28,7 @@ db_memory = {}
 # Configurar CORS
 CORS(
     app,
-    origins=["http://localhost:5000", "http://127.0.0.1:5000"],
+    origins=["http://localhost:5001", "http://127.0.0.1:5001"],
     supports_credentials=True,
     allow_headers=["Content-Type"],
     methods=["GET", "POST", "OPTIONS"],
@@ -35,7 +36,7 @@ CORS(
 
 # ------------------------- Integração com API de Predição -------------------------
 API_PREDICT_HEART = os.getenv("API_PREDICT_HEART", "http://localhost:8001/predict")
-API_PREDICT_PNEUMONIA = os.getenv("API_PREDICT_PNEUMONIA", "http://localhost:8001/predict")
+API_PREDICT_PNEUMONIA = os.getenv("API_PREDICT_PNEUMONIA", "http://localhost:8002/predict")
 
 def _build_api_payload(session):
     """Monta o payload esperado pela API a partir dos valores normalizados já salvos na sessão."""
@@ -130,11 +131,25 @@ def unique_name(folder: str, filename: str) -> str:
     ts = datetime.now().strftime("%Y%m%d-%H%M%S")
     return f"{base}_{ts}{ext}"
 
-def gerar_explicacao(payload: dict, label: str) -> str:
+def gerar_explicacao(payload: dict, label: str, openai_explanation: Optional[str] = None) -> str:
     """
-    Gera uma explicação legível com base nos valores coletados e na classe prevista.
-    Não altera nenhum outro comportamento do app.
+    Gera uma explicação legível do diagnóstico.
+    Prioriza a explicação da OpenAI se fornecida, caso contrário usa explicação local baseada em regras.
+    
+    Args:
+        payload: Dados do paciente enviados à API
+        label: Label da predição (ALTO_RISCO ou BAIXO_RISCO)
+        openai_explanation: Explicação gerada pela OpenAI (opcional)
+    
+    Returns:
+        String formatada com a explicação do diagnóstico
     """
+    # Se houver explicação da OpenAI, usar ela
+    # Verificar se não é None e se não é string vazia após strip
+    if openai_explanation is not None and str(openai_explanation).strip():
+        return "\n🤖 *Explicação do Diagnóstico*\n" + str(openai_explanation).strip() + "\n"
+    
+    # Fallback: explicação local baseada em regras
     try:
         idade  = payload.get("Age") or 0
         hr     = payload.get("MaxHR") or 0
@@ -732,6 +747,17 @@ def chat():
                 label = result.get("label")
                 prob = result.get("probability_positive")
                 warnings = result.get("warnings") or []
+                # Capturar explicações da OpenAI se disponíveis
+                openai_explanation = result.get("explanation")  # Compatibilidade
+                openai_explanation_patient = result.get("explanation_patient")
+                openai_explanation_professional = result.get("explanation_professional")
+                
+                # Debug: verificar se as explicações estão sendo recebidas
+                print(f"[DEBUG] Explicação recebida da API: {repr(openai_explanation)}")
+                print(f"[DEBUG] Explicação paciente: {repr(openai_explanation_patient)}")
+                print(f"[DEBUG] Explicação profissional: {repr(openai_explanation_professional)}")
+                print(f"[DEBUG] Chaves no result: {list(result.keys())}")
+                
                 linhas = ["🔮 *Resultado da Predição*"]
 
                 if str(label).strip().upper() in ["ALTO_RISCO", "ALTO RISCO", "1"]:
@@ -746,8 +772,29 @@ def chat():
                 )
                 if warnings:
                     linhas.append("\n⚠️ Avisos:\n " + "; ".join(warnings))
-                linhas.append(gerar_explicacao(payload, label))
-                linhas.append("Digite 'sim' para iniciar novo atendimento ou 'não' para encerrar.")
+                
+                # Usar explicação da OpenAI se disponível, senão usar explicação local
+                # Priorizar explanation_patient se disponível, senão usar explanation (compatibilidade)
+                explanation_to_use = openai_explanation_patient or openai_explanation
+                
+                if explanation_to_use and str(explanation_to_use).strip():
+                    # Exibir explicação para o paciente
+                    linhas.append("\n🤖 *Explicação para o Paciente*")
+                    linhas.append(str(explanation_to_use).strip())
+                    
+                    # Se houver explicação profissional, adicionar também
+                    if openai_explanation_professional and str(openai_explanation_professional).strip():
+                        linhas.append("\n\n👨‍⚕️ *Análise Técnica para o Profissional*")
+                        linhas.append(str(openai_explanation_professional).strip())
+                else:
+                    # Fallback para explicação local
+                    explicacao_texto = gerar_explicacao(payload, label, None)
+                    linhas.append(explicacao_texto)
+                    
+                    # Nota informativa se não há explicação da OpenAI
+                    linhas.append("\n💡 *Nota*: Para receber explicações detalhadas geradas por IA, configure a OPENAI_API_KEY no servidor da API.")
+                
+                linhas.append("\nDigite 'sim' para iniciar novo atendimento ou 'não' para encerrar.")
                 return jsonify({
                     "msg": "\n".join(linhas),
                     "type_conversation": "await_service"
