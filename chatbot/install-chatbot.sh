@@ -52,7 +52,7 @@ API_PREDICT_HEART="http://127.0.0.1:8001/predict"
 # URL da API de predição de PNEUMONIA (FastAPI)
 API_PREDICT_PNEUMONIA="http://127.0.0.1:8002/predict"
 # Porta do Flask (dev server)
-PORT="5000"
+PORT="5001"
 # ====================================================
 ENV
 fi
@@ -60,8 +60,8 @@ fi
 # 7) Executa o servidor (Flask dev server)
 clear
 echo "✅ Instalação concluída!"
-echo "🚀 Iniciando BotHealth (Flask) na porta ${PORT:-5000} ..."
-echo "👉 Acesse: http://127.0.0.1:${PORT:-5000}/"
+echo "🚀 Iniciando BotHealth (Flask) na porta ${PORT:-5001} ..."
+echo "👉 Acesse: http://127.0.0.1:${PORT:-5001}/"
 echo "👉 Endpoint do chat: POST /chat"
 export FLASK_APP=app.py
-flask run --host 0.0.0.0 --port ${PORT:-5000}
+flask run --host 0.0.0.0 --port ${PORT:-5001}

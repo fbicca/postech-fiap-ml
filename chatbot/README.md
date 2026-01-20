@@ -54,9 +54,9 @@ Inclui instalador `install-chatbot.sh`, endpoints de chat e upload, e exemplos d
 chmod +x install-chatbot.sh
 ./install-chatbot.sh
 ```
-O script cria `.venv`, instala dependências, gera `.env` (se ausente) e inicia o Flask na **porta 5000**.  
+O script cria `.venv`, instala dependências, gera `.env` (se ausente) e inicia o Flask na **porta 5001**.  
 URLs úteis:
-- Home: `http://127.0.0.1:5000/`
+- Home: `http://127.0.0.1:5001/`
 - Chat (POST): `/chat`
 - Upload de imagem (POST): `/upload`
 - Servir arquivos: `/uploads/<filename>`
@@ -74,7 +74,7 @@ API_PREDICT_PNEUMONIA="http://127.0.0.1:8002/predict"
 
 # Flask
 FLASK_SECRET_KEY="uma_chave_secreta_segura"
-PORT=5000
+PORT=5001
 ```
 
 - **API_PREDICT_HEART** → endpoint `/predict` da **API Coração**.
@@ -135,13 +135,25 @@ A API de risco cardiovascular (FastAPI) expõe, entre outros, **`/predict`**, **
       "features_expected": ["Age", "Sex", "..."],
       "model_class": "LogisticRegression"
     },
-    "warnings": []
+    "warnings": [],
+    "explanation": "O modelo identificou um risco elevado de doença cardiovascular (91% de probabilidade) baseado nos dados fornecidos. Os principais fatores que contribuíram para este resultado incluem: idade avançada (68 anos), presença de angina induzida por exercício, hipertrofia ventricular esquerda no ECG, e depressão significativa do segmento ST. Recomenda-se consulta médica urgente para avaliação completa e definição do tratamento adequado."
   }
   ```
 - **Como o chatbot usa**:
   1. Conduz o usuário pelas 12 entradas com **validações** e **formatação** amigável.
-  2. Exibe um **resumo** e pede confirmação (“SIM” para enviar).
+  2. Exibe um **resumo** e pede confirmação ("SIM" para enviar).
   3. Envia o JSON à API e formata o retorno (rótulo + probabilidade) em linguagem natural.
+  4. **Exibe a explicação da OpenAI** (campo `explanation`) se disponível, ou usa explicação local como fallback.
+
+### 🤖 Explicações com OpenAI
+
+O chatbot agora exibe automaticamente as explicações em linguagem natural geradas pela OpenAI quando disponíveis:
+
+- ✅ **Prioridade**: Se a API retornar o campo `explanation` (gerado pela OpenAI), ele é exibido ao usuário
+- ✅ **Fallback**: Se não houver explicação da OpenAI, o chatbot usa a explicação local baseada em regras
+- ✅ **Formatação**: As explicações são exibidas com o título "🤖 *Explicação do Diagnóstico*" para destacar que são geradas por IA
+
+**Nota**: Para que as explicações da OpenAI sejam geradas, é necessário configurar a variável de ambiente `OPENAI_API_KEY` no servidor da API (`api-model-heart`).
 
 > Endpoints auxiliares: `/health` (status do modelo), `/predict-batch` (lote), `/debug-vector` (vetor alinhado/escalado).
 
@@ -184,26 +196,26 @@ A API de Pneumonia (FastAPI + TensorFlow) recebe imagem e retorna a classe mais 
 # ou manualmente:
 # python3 -m venv .venv && source .venv/bin/activate
 # pip install -r requirements.txt
-# export PORT=5000 && flask run --host 0.0.0.0 --port $PORT
+# export PORT=5001 && flask run --host 0.0.0.0 --port $PORT
 ```
 
 ### 2) Cardio – enviar opções pelo chat
 ```bash
-curl -s -X POST http://127.0.0.1:5000/chat \
+curl -s -X POST http://127.0.0.1:5001/chat \
   -H "Content-Type: application/json" \
   -d '{"msg":"1","type_conversation":"await_service"}' | python3 -m json.tool
 ```
 
 ### 3) Pneumonia – upload + confirmar envio
 ```bash
-curl -F "file=@NORMAL2-IM-1436-0001.jpeg" http://127.0.0.1:5000/upload
+curl -F "file=@NORMAL2-IM-1436-0001.jpeg" http://127.0.0.1:5001/upload
 
-curl -s -X POST http://127.0.0.1:5000/chat \
+curl -s -X POST http://127.0.0.1:5001/chat \
   -H "Content-Type: application/json" \
   -d '{"msg":"sim","type_conversation":"await_pneumonia_confirm"}' | python3 -m json.tool
 ```
 
-> **Portas sugeridas**: API Coração em **8001**, API Pneumonia em **8002**, Chatbot Flask em **5000**.
+> **Portas sugeridas**: API Coração em **8001**, API Pneumonia em **8002**, Chatbot Flask em **5001**.
 
 ---
 

@@ -1,0 +1,23 @@
+=== Checagem de nulos ===
+Age               0
+Sex               0
+ChestPainType     0
+RestingBP         0
+Cholesterol       0
+FastingBS         0
+RestingECG        0
+MaxHR             0
+ExerciseAngina    0
+Oldpeak           0
+ST_Slope          0
+HeartDisease      0
+
+=== Balanceamento da classe alvo ===
+              count     pct
+HeartDisease               
+1               508  0.5534
+0               410  0.4466
+
+Shape original: (918, 12)
+Shape após One-Hot: (918, 16)
+Treino: (642, 15), Teste: (276, 15)

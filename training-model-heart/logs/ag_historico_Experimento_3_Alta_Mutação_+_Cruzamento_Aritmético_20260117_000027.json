@@ -1,0 +1,153 @@
+{
+  "timestamp": "20260117_000027",
+  "nome_experimento": "Experimento 3: Alta Mutação + Cruzamento Aritmético",
+  "data_hora": "2026-01-17T00:00:48.348958",
+  "historico": [
+    {
+      "geracao": 0,
+      "fitness_medio": 0.8618753072723564,
+      "fitness_max": 0.8881047159171916,
+      "fitness_min": 0.8136520469814482,
+      "tempo_segundos": 1.0215299129486084
+    },
+    {
+      "geracao": 1,
+      "fitness_medio": 0.8646721378673866,
+      "fitness_max": 0.8881047159171916,
+      "fitness_min": 0.8163447725240615,
+      "tempo_segundos": 1.0119647979736328
+    },
+    {
+      "geracao": 2,
+      "fitness_medio": 0.867047377640646,
+      "fitness_max": 0.8887739866973363,
+      "fitness_min": 0.8292213576460961,
+      "tempo_segundos": 0.9995617866516113
+    },
+    {
+      "geracao": 3,
+      "fitness_medio": 0.8705403235453062,
+      "fitness_max": 0.8887739866973363,
+      "fitness_min": 0.8551018410518096,
+      "tempo_segundos": 1.0253748893737793
+    },
+    {
+      "geracao": 4,
+      "fitness_medio": 0.8710472620584641,
+      "fitness_max": 0.8887739866973363,
+      "fitness_min": 0.8282372871263299,
+      "tempo_segundos": 1.0193328857421875
+    },
+    {
+      "geracao": 5,
+      "fitness_medio": 0.8758637886296727,
+      "fitness_max": 0.8887739866973363,
+      "fitness_min": 0.8371717713273737,
+      "tempo_segundos": 0.9893069267272949
+    },
+    {
+      "geracao": 6,
+      "fitness_medio": 0.8777786762235544,
+      "fitness_max": 0.8887739866973363,
+      "fitness_min": 0.8371717713273737,
+      "tempo_segundos": 0.99428391456604
+    },
+    {
+      "geracao": 7,
+      "fitness_medio": 0.8799456274000406,
+      "fitness_max": 0.8887739866973363,
+      "fitness_min": 0.8371717713273737,
+      "tempo_segundos": 1.0254058837890625
+    },
+    {
+      "geracao": 8,
+      "fitness_medio": 0.8714388577019468,
+      "fitness_max": 0.8887739866973363,
+      "fitness_min": 0.8371717713273737,
+      "tempo_segundos": 1.040632963180542
+    },
+    {
+      "geracao": 9,
+      "fitness_medio": 0.8741922358112946,
+      "fitness_max": 0.8887739866973363,
+      "fitness_min": 0.8371717713273737,
+      "tempo_segundos": 1.018733024597168
+    },
+    {
+      "geracao": 10,
+      "fitness_medio": 0.8710243625978988,
+      "fitness_max": 0.8887739866973363,
+      "fitness_min": 0.8371717713273737,
+      "tempo_segundos": 1.0198180675506592
+    },
+    {
+      "geracao": 11,
+      "fitness_medio": 0.8738366891891065,
+      "fitness_max": 0.8895241678263908,
+      "fitness_min": 0.8371717713273737,
+      "tempo_segundos": 1.010218620300293
+    },
+    {
+      "geracao": 12,
+      "fitness_medio": 0.8672820997339504,
+      "fitness_max": 0.8895241678263908,
+      "fitness_min": 0.8218364200920965,
+      "tempo_segundos": 1.0329458713531494
+    },
+    {
+      "geracao": 13,
+      "fitness_medio": 0.8707246060249821,
+      "fitness_max": 0.8895241678263908,
+      "fitness_min": 0.8218364200920965,
+      "tempo_segundos": 1.0489108562469482
+    },
+    {
+      "geracao": 14,
+      "fitness_medio": 0.8686171692630479,
+      "fitness_max": 0.8895241678263908,
+      "fitness_min": 0.8218364200920965,
+      "tempo_segundos": 1.050746202468872
+    },
+    {
+      "geracao": 15,
+      "fitness_medio": 0.8666999093728573,
+      "fitness_max": 0.8895241678263908,
+      "fitness_min": 0.8218364200920965,
+      "tempo_segundos": 1.0520141124725342
+    },
+    {
+      "geracao": 16,
+      "fitness_medio": 0.8642562760344855,
+      "fitness_max": 0.8895241678263908,
+      "fitness_min": 0.801595553849431,
+      "tempo_segundos": 1.074479103088379
+    },
+    {
+      "geracao": 17,
+      "fitness_medio": 0.8655525701688095,
+      "fitness_max": 0.8895241678263908,
+      "fitness_min": 0.801595553849431,
+      "tempo_segundos": 1.0309710502624512
+    },
+    {
+      "geracao": 18,
+      "fitness_medio": 0.8663145353588309,
+      "fitness_max": 0.8895241678263908,
+      "fitness_min": 0.801595553849431,
+      "tempo_segundos": 1.0213508605957031
+    },
+    {
+      "geracao": 19,
+      "fitness_medio": 0.872304512756829,
+      "fitness_max": 0.8895241678263908,
+      "fitness_min": 0.8551018410518096,
+      "tempo_segundos": 1.0394389629364014
+    }
+  ],
+  "resumo": {
+    "numero_geracoes": 20,
+    "fitness_final_max": 0.8895241678263908,
+    "fitness_final_medio": 0.872304512756829,
+    "melhor_fitness_geral": 0.8895241678263908
+  }
+}

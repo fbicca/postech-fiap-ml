@@ -10,9 +10,26 @@ O modelo foi treinado com **scikit-learn (Regressão Logística)** e utiliza **S
 | Endpoint         | Método | Descrição                                                     |
 |------------------|--------|---------------------------------------------------------------|
 | `/health`        | GET    | Verifica se o modelo e o scaler foram carregados corretamente |
-| `/predict`       | POST   | Realiza predição individual de risco cardíaco                 |
+| `/predict`       | POST   | Realiza predição individual de risco cardíaco com explicação em linguagem natural (OpenAI) |
 | `/predict-batch` | POST   | Permite predição em lote                                      |
 | `/debug-vector`  | POST   | Retorna o vetor processado e colunas utilizadas               |
+
+## 🤖 Integração com OpenAI
+
+A API agora inclui integração com a OpenAI para gerar explicações em linguagem natural dos diagnósticos. 
+
+**Funcionalidades:**
+- ✅ Análise automática dos dados do paciente e resultado da predição
+- ✅ Explicações claras e compreensíveis em português brasileiro
+- ✅ Destaque dos principais fatores de risco identificados
+- ✅ Uso do modelo `gpt-4o-mini` (econômico e eficiente)
+- ✅ Fallback gracioso: se a API não estiver configurada, a predição funciona normalmente sem explicação
+
+**Como funciona:**
+1. A rota `/predict` realiza a predição normalmente
+2. Se `OPENAI_API_KEY` estiver configurada, uma explicação é gerada automaticamente
+3. A explicação é incluída no campo `explanation` da resposta JSON
+4. Se houver erro na geração da explicação, a API continua funcionando normalmente
 
 ---
 
@@ -57,10 +74,11 @@ http POST :8001/predict   Age:=52 Sex=M ChestPainType=ASY RestingBP:=110 Cholest
   "label": "ALTO_RISCO",
   "probability_positive": 0.91,
   "warnings": [],
-  "model_info": {
+  "modelDetails": {
     "features_expected": ["Age", "Sex", "ChestPainType", "..."],
     "model_class": "LogisticRegression"
-  }
+  },
+  "explanation": "O modelo identificou um risco elevado de doença cardiovascular (91% de probabilidade) baseado nos dados fornecidos. Os principais fatores que contribuíram para este resultado incluem: idade avançada (68 anos), presença de angina induzida por exercício, hipertrofia ventricular esquerda no ECG, e depressão significativa do segmento ST. Recomenda-se consulta médica urgente para avaliação completa e definição do tratamento adequado."
 }
 ```
 
@@ -144,7 +162,21 @@ SCALER_PATH=scaler_dados.pkl
 
 # Caminho do CSV com as colunas originais do treino (usado como fallback)
 FEATURE_COLUMNS_PATH=X_train.csv
+
+# ------------------------------------------------------------
+# 🤖 Configurações da OpenAI (para explicações em linguagem natural)
+# ------------------------------------------------------------
+# Chave de API da OpenAI (obtenha em https://platform.openai.com/api-keys)
+OPENAI_API_KEY=sua_chave_api_aqui
+
+# Modelo da OpenAI a ser usado (padrão: gpt-4o-mini - barato e eficiente)
+OPENAI_MODEL=gpt-4o-mini
 ```
 
 Essas variáveis são lidas automaticamente no `api-model-heart.py` e usadas para carregar o modelo,
 o scaler e a referência de colunas do treino.
+
+**Nota sobre explicações com OpenAI:**
+- Se `OPENAI_API_KEY` não estiver configurada, a API funcionará normalmente, mas o campo `explanation` será `null`
+- O modelo padrão `gpt-4o-mini` é uma opção econômica que oferece boas respostas
+- As explicações são geradas automaticamente na rota `/predict` analisando os dados do paciente e o resultado da predição

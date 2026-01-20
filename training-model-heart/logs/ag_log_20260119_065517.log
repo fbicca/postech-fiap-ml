@@ -1,0 +1,196 @@
+2026-01-19 06:55:17 - AG - INFO - [ag_logging.py:67] - #AG Logging iniciado. Logs serão salvos em: logs/ag_log_20260119_065517.log
+2026-01-19 06:55:17 - AG.Main - INFO - [ag_logging.py:67] - #AG Logging iniciado. Logs serão salvos em: evidencias/logs/ag_log_20260119_065517.log
+2026-01-19 06:55:17 - AG.Main - INFO - [main.py:120] - #AG Iniciando pipeline de treinamento - Modo: experimentos
+2026-01-19 06:55:17 - AG.Main - INFO - [main.py:121] - #AG Dataset: heart.csv, Target: HeartDisease
+2026-01-19 06:55:17 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:218] - #AG Iniciando algoritmo genético...
+2026-01-19 06:55:17 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:218] - #AG Iniciando algoritmo genético...
+2026-01-19 06:55:17 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:219] - #AG Configuração: População=20, Gerações=15, Taxa Cruzamento=0.7, Taxa Mutação=0.1
+2026-01-19 06:55:17 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:219] - #AG Configuração: População=20, Gerações=15, Taxa Cruzamento=0.7, Taxa Mutação=0.1
+2026-01-19 06:55:17 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:230] - #AG Configuração salva em: logs/ag_config_20260119_065517.json
+2026-01-19 06:55:17 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:230] - #AG Configuração salva em: logs/ag_config_20260119_065517.json
+2026-01-19 06:55:17 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:234] - #AG População inicial criada com 20 indivíduos
+2026-01-19 06:55:17 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:234] - #AG População inicial criada com 20 indivíduos
+2026-01-19 06:55:17 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 1/15 - Fitness: max=0.8800, médio=0.8578, min=0.8126, Tempo: 0.66s
+2026-01-19 06:55:17 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 1/15 - Fitness: max=0.8800, médio=0.8578, min=0.8126, Tempo: 0.66s
+2026-01-19 06:55:18 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 2/15 - Fitness: max=0.8800, médio=0.8729, min=0.8551, Tempo: 0.64s
+2026-01-19 06:55:18 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 2/15 - Fitness: max=0.8800, médio=0.8729, min=0.8551, Tempo: 0.64s
+2026-01-19 06:55:19 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 3/15 - Fitness: max=0.8801, médio=0.8735, min=0.8386, Tempo: 0.65s
+2026-01-19 06:55:19 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 3/15 - Fitness: max=0.8801, médio=0.8735, min=0.8386, Tempo: 0.65s
+2026-01-19 06:55:19 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 4/15 - Fitness: max=0.8816, médio=0.8785, min=0.8551, Tempo: 0.67s
+2026-01-19 06:55:19 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 4/15 - Fitness: max=0.8816, médio=0.8785, min=0.8551, Tempo: 0.67s
+2026-01-19 06:55:20 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 5/15 - Fitness: max=0.8816, médio=0.8802, min=0.8800, Tempo: 0.69s
+2026-01-19 06:55:20 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 5/15 - Fitness: max=0.8816, médio=0.8802, min=0.8800, Tempo: 0.69s
+2026-01-19 06:55:21 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 6/15 - Fitness: max=0.8816, médio=0.8805, min=0.8800, Tempo: 0.68s
+2026-01-19 06:55:21 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 6/15 - Fitness: max=0.8816, médio=0.8805, min=0.8800, Tempo: 0.68s
+2026-01-19 06:55:21 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 7/15 - Fitness: max=0.8901, médio=0.8799, min=0.8551, Tempo: 0.66s
+2026-01-19 06:55:21 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 7/15 - Fitness: max=0.8901, médio=0.8799, min=0.8551, Tempo: 0.66s
+2026-01-19 06:55:22 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 8/15 - Fitness: max=0.8901, médio=0.8801, min=0.8551, Tempo: 0.65s
+2026-01-19 06:55:22 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 8/15 - Fitness: max=0.8901, médio=0.8801, min=0.8551, Tempo: 0.65s
+2026-01-19 06:55:23 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 9/15 - Fitness: max=0.8901, médio=0.8837, min=0.8736, Tempo: 0.65s
+2026-01-19 06:55:23 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 9/15 - Fitness: max=0.8901, médio=0.8837, min=0.8736, Tempo: 0.65s
+2026-01-19 06:55:23 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 10/15 - Fitness: max=0.8901, médio=0.8879, min=0.8801, Tempo: 0.68s
+2026-01-19 06:55:23 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 10/15 - Fitness: max=0.8901, médio=0.8879, min=0.8801, Tempo: 0.68s
+2026-01-19 06:55:24 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 11/15 - Fitness: max=0.8901, médio=0.8879, min=0.8551, Tempo: 0.72s
+2026-01-19 06:55:24 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 11/15 - Fitness: max=0.8901, médio=0.8879, min=0.8551, Tempo: 0.72s
+2026-01-19 06:55:25 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 12/15 - Fitness: max=0.8901, médio=0.8858, min=0.8551, Tempo: 0.73s
+2026-01-19 06:55:25 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 12/15 - Fitness: max=0.8901, médio=0.8858, min=0.8551, Tempo: 0.73s
+2026-01-19 06:55:26 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 13/15 - Fitness: max=0.8901, médio=0.8884, min=0.8735, Tempo: 0.74s
+2026-01-19 06:55:26 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 13/15 - Fitness: max=0.8901, médio=0.8884, min=0.8735, Tempo: 0.74s
+2026-01-19 06:55:26 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 14/15 - Fitness: max=0.8901, médio=0.8823, min=0.8202, Tempo: 0.75s
+2026-01-19 06:55:26 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 14/15 - Fitness: max=0.8901, médio=0.8823, min=0.8202, Tempo: 0.75s
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 15/15 - Fitness: max=0.8901, médio=0.8886, min=0.8729, Tempo: 0.74s
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 15/15 - Fitness: max=0.8901, médio=0.8886, min=0.8729, Tempo: 0.74s
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:302] - #AG Algoritmo genético concluído!
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:302] - #AG Algoritmo genético concluído!
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:303] - #AG Melhor fitness: 0.8901
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:303] - #AG Melhor fitness: 0.8901
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:304] - #AG Tempo total de execução: 10.32 segundos (0.17 minutos)
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:304] - #AG Tempo total de execução: 10.32 segundos (0.17 minutos)
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:321] - #AG Histórico salvo em: logs/ag_historico_Experimento_1_Configuração_Conservadora_20260119_065517.json
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:321] - #AG Histórico salvo em: logs/ag_historico_Experimento_1_Configuração_Conservadora_20260119_065517.json
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:337] - #AG Gráficos gerados:
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:337] - #AG Gráficos gerados:
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:338] - #AG   - Evolução: logs/ag_evolucao_fitness_Experimento_1_Configuração_Conservadora_20260119_065517.png
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:338] - #AG   - Evolução: logs/ag_evolucao_fitness_Experimento_1_Configuração_Conservadora_20260119_065517.png
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:339] - #AG   - Convergência: logs/ag_convergencia_Experimento_1_Configuração_Conservadora_20260119_065517.png
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:339] - #AG   - Convergência: logs/ag_convergencia_Experimento_1_Configuração_Conservadora_20260119_065517.png
+2026-01-19 06:55:27 - AG.ag_experimentos - INFO - [ag_experimentos.py:119] - #AG Tempo de execução do AG: 10.32s
+2026-01-19 06:55:27 - AG.ag_experimentos - INFO - [ag_experimentos.py:119] - #AG Tempo de execução do AG: 10.32s
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:218] - #AG Iniciando algoritmo genético...
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:218] - #AG Iniciando algoritmo genético...
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:219] - #AG Configuração: População=40, Gerações=25, Taxa Cruzamento=0.7, Taxa Mutação=0.1
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:219] - #AG Configuração: População=40, Gerações=25, Taxa Cruzamento=0.7, Taxa Mutação=0.1
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:230] - #AG Configuração salva em: logs/ag_config_20260119_065527.json
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:230] - #AG Configuração salva em: logs/ag_config_20260119_065527.json
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:234] - #AG População inicial criada com 40 indivíduos
+2026-01-19 06:55:27 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:234] - #AG População inicial criada com 40 indivíduos
+2026-01-19 06:55:29 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 1/25 - Fitness: max=0.8895, médio=0.8618, min=0.8139, Tempo: 1.36s
+2026-01-19 06:55:29 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 1/25 - Fitness: max=0.8895, médio=0.8618, min=0.8139, Tempo: 1.36s
+2026-01-19 06:55:30 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 2/25 - Fitness: max=0.8895, médio=0.8748, min=0.8551, Tempo: 1.33s
+2026-01-19 06:55:30 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 2/25 - Fitness: max=0.8895, médio=0.8748, min=0.8551, Tempo: 1.33s
+2026-01-19 06:55:31 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 3/25 - Fitness: max=0.8895, médio=0.8808, min=0.8372, Tempo: 1.31s
+2026-01-19 06:55:31 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 3/25 - Fitness: max=0.8895, médio=0.8808, min=0.8372, Tempo: 1.31s
+2026-01-19 06:55:33 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 4/25 - Fitness: max=0.8895, médio=0.8864, min=0.8551, Tempo: 1.33s
+2026-01-19 06:55:33 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 4/25 - Fitness: max=0.8895, médio=0.8864, min=0.8551, Tempo: 1.33s
+2026-01-19 06:55:34 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 5/25 - Fitness: max=0.8895, médio=0.8876, min=0.8463, Tempo: 1.32s
+2026-01-19 06:55:34 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 5/25 - Fitness: max=0.8895, médio=0.8876, min=0.8463, Tempo: 1.32s
+2026-01-19 06:55:35 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 6/25 - Fitness: max=0.8895, médio=0.8883, min=0.8551, Tempo: 1.29s
+2026-01-19 06:55:35 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 6/25 - Fitness: max=0.8895, médio=0.8883, min=0.8551, Tempo: 1.29s
+2026-01-19 06:55:37 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 7/25 - Fitness: max=0.8895, médio=0.8882, min=0.8551, Tempo: 1.29s
+2026-01-19 06:55:37 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 7/25 - Fitness: max=0.8895, médio=0.8882, min=0.8551, Tempo: 1.29s
+2026-01-19 06:55:38 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 8/25 - Fitness: max=0.8911, médio=0.8888, min=0.8735, Tempo: 1.28s
+2026-01-19 06:55:38 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 8/25 - Fitness: max=0.8911, médio=0.8888, min=0.8735, Tempo: 1.28s
+2026-01-19 06:55:39 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 9/25 - Fitness: max=0.8911, médio=0.8837, min=0.8551, Tempo: 1.30s
+2026-01-19 06:55:39 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 9/25 - Fitness: max=0.8911, médio=0.8837, min=0.8551, Tempo: 1.30s
+2026-01-19 06:55:41 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 10/25 - Fitness: max=0.8911, médio=0.8842, min=0.8340, Tempo: 1.28s
+2026-01-19 06:55:41 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 10/25 - Fitness: max=0.8911, médio=0.8842, min=0.8340, Tempo: 1.28s
+2026-01-19 06:55:42 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 11/25 - Fitness: max=0.8911, médio=0.8875, min=0.8209, Tempo: 1.25s
+2026-01-19 06:55:42 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 11/25 - Fitness: max=0.8911, médio=0.8875, min=0.8209, Tempo: 1.25s
+2026-01-19 06:55:43 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 12/25 - Fitness: max=0.8911, médio=0.8876, min=0.8438, Tempo: 1.26s
+2026-01-19 06:55:43 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 12/25 - Fitness: max=0.8911, médio=0.8876, min=0.8438, Tempo: 1.26s
+2026-01-19 06:55:44 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 13/25 - Fitness: max=0.8911, médio=0.8871, min=0.8324, Tempo: 1.30s
+2026-01-19 06:55:44 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 13/25 - Fitness: max=0.8911, médio=0.8871, min=0.8324, Tempo: 1.30s
+2026-01-19 06:55:46 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 14/25 - Fitness: max=0.8911, médio=0.8874, min=0.8282, Tempo: 1.32s
+2026-01-19 06:55:46 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 14/25 - Fitness: max=0.8911, médio=0.8874, min=0.8282, Tempo: 1.32s
+2026-01-19 06:55:47 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 15/25 - Fitness: max=0.8911, médio=0.8893, min=0.8552, Tempo: 1.41s
+2026-01-19 06:55:47 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 15/25 - Fitness: max=0.8911, médio=0.8893, min=0.8552, Tempo: 1.41s
+2026-01-19 06:55:49 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 16/25 - Fitness: max=0.8911, médio=0.8911, min=0.8911, Tempo: 1.43s
+2026-01-19 06:55:49 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 16/25 - Fitness: max=0.8911, médio=0.8911, min=0.8911, Tempo: 1.43s
+2026-01-19 06:55:50 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 17/25 - Fitness: max=0.8911, médio=0.8884, min=0.8552, Tempo: 1.46s
+2026-01-19 06:55:50 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 17/25 - Fitness: max=0.8911, médio=0.8884, min=0.8552, Tempo: 1.46s
+2026-01-19 06:55:51 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 18/25 - Fitness: max=0.8911, médio=0.8878, min=0.8552, Tempo: 1.46s
+2026-01-19 06:55:51 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 18/25 - Fitness: max=0.8911, médio=0.8878, min=0.8552, Tempo: 1.46s
+2026-01-19 06:55:53 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 19/25 - Fitness: max=0.8911, médio=0.8862, min=0.7989, Tempo: 1.44s
+2026-01-19 06:55:53 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 19/25 - Fitness: max=0.8911, médio=0.8862, min=0.7989, Tempo: 1.44s
+2026-01-19 06:55:54 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 20/25 - Fitness: max=0.8911, médio=0.8889, min=0.8552, Tempo: 1.47s
+2026-01-19 06:55:54 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 20/25 - Fitness: max=0.8911, médio=0.8889, min=0.8552, Tempo: 1.47s
+2026-01-19 06:55:56 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 21/25 - Fitness: max=0.8911, médio=0.8902, min=0.8735, Tempo: 1.46s
+2026-01-19 06:55:56 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 21/25 - Fitness: max=0.8911, médio=0.8902, min=0.8735, Tempo: 1.46s
+2026-01-19 06:55:57 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 22/25 - Fitness: max=0.8981, médio=0.8900, min=0.8552, Tempo: 1.47s
+2026-01-19 06:55:57 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 22/25 - Fitness: max=0.8981, médio=0.8900, min=0.8552, Tempo: 1.47s
+2026-01-19 06:55:59 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 23/25 - Fitness: max=0.8981, médio=0.8903, min=0.8552, Tempo: 1.46s
+2026-01-19 06:55:59 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 23/25 - Fitness: max=0.8981, médio=0.8903, min=0.8552, Tempo: 1.46s
+2026-01-19 06:56:00 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 24/25 - Fitness: max=0.8981, médio=0.8912, min=0.8552, Tempo: 1.45s
+2026-01-19 06:56:00 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 24/25 - Fitness: max=0.8981, médio=0.8912, min=0.8552, Tempo: 1.45s
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 25/25 - Fitness: max=0.8981, médio=0.8906, min=0.7963, Tempo: 1.44s
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 25/25 - Fitness: max=0.8981, médio=0.8906, min=0.7963, Tempo: 1.44s
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:302] - #AG Algoritmo genético concluído!
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:302] - #AG Algoritmo genético concluído!
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:303] - #AG Melhor fitness: 0.8981
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:303] - #AG Melhor fitness: 0.8981
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:304] - #AG Tempo total de execução: 34.20 segundos (0.57 minutos)
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:304] - #AG Tempo total de execução: 34.20 segundos (0.57 minutos)
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:321] - #AG Histórico salvo em: logs/ag_historico_Experimento_2_População_Maior_+_Mais_Gerações_20260119_065527.json
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:321] - #AG Histórico salvo em: logs/ag_historico_Experimento_2_População_Maior_+_Mais_Gerações_20260119_065527.json
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:337] - #AG Gráficos gerados:
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:337] - #AG Gráficos gerados:
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:338] - #AG   - Evolução: logs/ag_evolucao_fitness_Experimento_2_População_Maior_+_Mais_Gerações_20260119_065527.png
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:338] - #AG   - Evolução: logs/ag_evolucao_fitness_Experimento_2_População_Maior_+_Mais_Gerações_20260119_065527.png
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:339] - #AG   - Convergência: logs/ag_convergencia_Experimento_2_População_Maior_+_Mais_Gerações_20260119_065527.png
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:339] - #AG   - Convergência: logs/ag_convergencia_Experimento_2_População_Maior_+_Mais_Gerações_20260119_065527.png
+2026-01-19 06:56:02 - AG.ag_experimentos - INFO - [ag_experimentos.py:119] - #AG Tempo de execução do AG: 34.20s
+2026-01-19 06:56:02 - AG.ag_experimentos - INFO - [ag_experimentos.py:119] - #AG Tempo de execução do AG: 34.20s
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:218] - #AG Iniciando algoritmo genético...
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:218] - #AG Iniciando algoritmo genético...
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:219] - #AG Configuração: População=30, Gerações=20, Taxa Cruzamento=0.8, Taxa Mutação=0.2
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:219] - #AG Configuração: População=30, Gerações=20, Taxa Cruzamento=0.8, Taxa Mutação=0.2
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:230] - #AG Configuração salva em: logs/ag_config_20260119_065602.json
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:230] - #AG Configuração salva em: logs/ag_config_20260119_065602.json
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:234] - #AG População inicial criada com 30 indivíduos
+2026-01-19 06:56:02 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:234] - #AG População inicial criada com 30 indivíduos
+2026-01-19 06:56:03 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 1/20 - Fitness: max=0.8800, médio=0.8614, min=0.8215, Tempo: 1.03s
+2026-01-19 06:56:03 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 1/20 - Fitness: max=0.8800, médio=0.8614, min=0.8215, Tempo: 1.03s
+2026-01-19 06:56:04 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 2/20 - Fitness: max=0.8876, médio=0.8635, min=0.8215, Tempo: 1.04s
+2026-01-19 06:56:04 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 2/20 - Fitness: max=0.8876, médio=0.8635, min=0.8215, Tempo: 1.04s
+2026-01-19 06:56:05 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 3/20 - Fitness: max=0.8876, médio=0.8647, min=0.8199, Tempo: 1.07s
+2026-01-19 06:56:05 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 3/20 - Fitness: max=0.8876, médio=0.8647, min=0.8199, Tempo: 1.07s
+2026-01-19 06:56:06 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 4/20 - Fitness: max=0.8876, médio=0.8649, min=0.8199, Tempo: 1.07s
+2026-01-19 06:56:06 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 4/20 - Fitness: max=0.8876, médio=0.8649, min=0.8199, Tempo: 1.07s
+2026-01-19 06:56:07 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 5/20 - Fitness: max=0.8876, médio=0.8669, min=0.8199, Tempo: 1.03s
+2026-01-19 06:56:07 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 5/20 - Fitness: max=0.8876, médio=0.8669, min=0.8199, Tempo: 1.03s
+2026-01-19 06:56:08 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 6/20 - Fitness: max=0.8876, médio=0.8650, min=0.8183, Tempo: 1.00s
+2026-01-19 06:56:08 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 6/20 - Fitness: max=0.8876, médio=0.8650, min=0.8183, Tempo: 1.00s
+2026-01-19 06:56:09 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 7/20 - Fitness: max=0.8876, médio=0.8675, min=0.8183, Tempo: 0.99s
+2026-01-19 06:56:09 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 7/20 - Fitness: max=0.8876, médio=0.8675, min=0.8183, Tempo: 0.99s
+2026-01-19 06:56:10 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 8/20 - Fitness: max=0.8876, médio=0.8674, min=0.7989, Tempo: 0.98s
+2026-01-19 06:56:10 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 8/20 - Fitness: max=0.8876, médio=0.8674, min=0.7989, Tempo: 0.98s
+2026-01-19 06:56:11 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 9/20 - Fitness: max=0.8876, médio=0.8676, min=0.7989, Tempo: 0.99s
+2026-01-19 06:56:11 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 9/20 - Fitness: max=0.8876, médio=0.8676, min=0.7989, Tempo: 0.99s
+2026-01-19 06:56:12 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 10/20 - Fitness: max=0.8876, médio=0.8722, min=0.7989, Tempo: 0.99s
+2026-01-19 06:56:12 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 10/20 - Fitness: max=0.8876, médio=0.8722, min=0.7989, Tempo: 0.99s
+2026-01-19 06:56:13 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 11/20 - Fitness: max=0.8876, médio=0.8701, min=0.7989, Tempo: 1.00s
+2026-01-19 06:56:13 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 11/20 - Fitness: max=0.8876, médio=0.8701, min=0.7989, Tempo: 1.00s
+2026-01-19 06:56:14 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 12/20 - Fitness: max=0.8876, médio=0.8727, min=0.7989, Tempo: 0.98s
+2026-01-19 06:56:14 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 12/20 - Fitness: max=0.8876, médio=0.8727, min=0.7989, Tempo: 0.98s
+2026-01-19 06:56:15 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 13/20 - Fitness: max=0.8876, médio=0.8759, min=0.8551, Tempo: 0.98s
+2026-01-19 06:56:15 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 13/20 - Fitness: max=0.8876, médio=0.8759, min=0.8551, Tempo: 0.98s
+2026-01-19 06:56:16 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 14/20 - Fitness: max=0.8908, médio=0.8768, min=0.8551, Tempo: 0.98s
+2026-01-19 06:56:16 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 14/20 - Fitness: max=0.8908, médio=0.8768, min=0.8551, Tempo: 0.98s
+2026-01-19 06:56:17 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 15/20 - Fitness: max=0.8908, médio=0.8779, min=0.8551, Tempo: 0.98s
+2026-01-19 06:56:17 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 15/20 - Fitness: max=0.8908, médio=0.8779, min=0.8551, Tempo: 0.98s
+2026-01-19 06:56:18 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 16/20 - Fitness: max=0.8908, médio=0.8760, min=0.8418, Tempo: 1.00s
+2026-01-19 06:56:18 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 16/20 - Fitness: max=0.8908, médio=0.8760, min=0.8418, Tempo: 1.00s
+2026-01-19 06:56:19 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 17/20 - Fitness: max=0.8908, médio=0.8722, min=0.8209, Tempo: 1.01s
+2026-01-19 06:56:19 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 17/20 - Fitness: max=0.8908, médio=0.8722, min=0.8209, Tempo: 1.01s
+2026-01-19 06:56:20 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 18/20 - Fitness: max=0.8908, médio=0.8716, min=0.8282, Tempo: 1.01s
+2026-01-19 06:56:20 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 18/20 - Fitness: max=0.8908, médio=0.8716, min=0.8282, Tempo: 1.01s
+2026-01-19 06:56:21 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 19/20 - Fitness: max=0.8923, médio=0.8711, min=0.8392, Tempo: 0.99s
+2026-01-19 06:56:21 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 19/20 - Fitness: max=0.8923, médio=0.8711, min=0.8392, Tempo: 0.99s
+2026-01-19 06:56:22 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 20/20 - Fitness: max=0.8923, médio=0.8713, min=0.8126, Tempo: 1.00s
+2026-01-19 06:56:22 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:267] - #AG Geração 20/20 - Fitness: max=0.8923, médio=0.8713, min=0.8126, Tempo: 1.00s
+2026-01-19 06:56:22 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:302] - #AG Algoritmo genético concluído!
+2026-01-19 06:56:22 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:302] - #AG Algoritmo genético concluído!
+2026-01-19 06:56:22 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:303] - #AG Melhor fitness: 0.8923
+2026-01-19 06:56:22 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:303] - #AG Melhor fitness: 0.8923
+2026-01-19 06:56:22 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:304] - #AG Tempo total de execução: 20.17 segundos (0.34 minutos)
+2026-01-19 06:56:22 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:304] - #AG Tempo total de execução: 20.17 segundos (0.34 minutos)
+2026-01-19 06:56:22 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:321] - #AG Histórico salvo em: logs/ag_historico_Experimento_3_Alta_Mutação_+_Cruzamento_Aritmético_20260119_065602.json
+2026-01-19 06:56:22 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:321] - #AG Histórico salvo em: logs/ag_historico_Experimento_3_Alta_Mutação_+_Cruzamento_Aritmético_20260119_065602.json
+2026-01-19 06:56:22 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:337] - #AG Gráficos gerados:
+2026-01-19 06:56:22 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:337] - #AG Gráficos gerados:
+2026-01-19 06:56:22 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:338] - #AG   - Evolução: logs/ag_evolucao_fitness_Experimento_3_Alta_Mutação_+_Cruzamento_Aritmético_20260119_065602.png
+2026-01-19 06:56:22 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:338] - #AG   - Evolução: logs/ag_evolucao_fitness_Experimento_3_Alta_Mutação_+_Cruzamento_Aritmético_20260119_065602.png
+2026-01-19 06:56:22 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:339] - #AG   - Convergência: logs/ag_convergencia_Experimento_3_Alta_Mutação_+_Cruzamento_Aritmético_20260119_065602.png
+2026-01-19 06:56:22 - AG.ag_algoritmo - INFO - [ag_algoritmo.py:339] - #AG   - Convergência: logs/ag_convergencia_Experimento_3_Alta_Mutação_+_Cruzamento_Aritmético_20260119_065602.png
+2026-01-19 06:56:22 - AG.ag_experimentos - INFO - [ag_experimentos.py:119] - #AG Tempo de execução do AG: 20.17s
+2026-01-19 06:56:22 - AG.ag_experimentos - INFO - [ag_experimentos.py:119] - #AG Tempo de execução do AG: 20.17s
