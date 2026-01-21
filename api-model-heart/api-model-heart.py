@@ -18,7 +18,7 @@ SCALER_PATH = os.getenv("SCALER_PATH", "scaler_dados.pkl")
 # Fallback de colunas do treino (usa cabeçalho do CSV para recuperar ordem/nomes)
 FEATURE_COLUMNS_PATH = os.getenv("FEATURE_COLUMNS_PATH", "X_train.csv")
 # OpenAI Configuration
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "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")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")  # Modelo barato mas eficiente
 
 app = FastAPI(title="Heart Failure Predictor API", version="1.2.0")
