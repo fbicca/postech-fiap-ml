@@ -1,0 +1,18 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+outputs/
+wandb/
+*.log
+# Pesos grandes do fine-tuning local (evidence.json e configs pequenas podem ser versionados)
+artifacts/finetuned/**/*.safetensors
+artifacts/finetuned/**/*.bin
+artifacts/finetuned/**/checkpoint-*/
+.DS_Store
+*.pt
+checkpoint-*/
+constraints-torch.txt
+# Banco demo gerado localmente (pode versionar se quiser entregar o SQLite vazio + seed)
+artifacts/db/*.sqlite
